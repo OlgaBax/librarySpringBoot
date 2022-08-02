@@ -41,6 +41,11 @@ public class Book {
     @Column(name = "yearofeditiontranslate")
     private String yearOfEditionTranslate;
 
+    @Column(name = "fileformatbook")
+    private FileFormatBook fileFormatBook;
+
+    @Column(name = "pathtozipbook")
+    private String pathToZipBook;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "genre_id")
@@ -53,12 +58,6 @@ public class Book {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "pubhousetranslate_id")
     private PubHouse pubHouseTranslate;
-
-    @Enumerated
-    private FileFormatBook fileFormatBook;
-
-    @Column(name = "pathtozipbook")
-    private String pathToZipBook;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "books_tags",
