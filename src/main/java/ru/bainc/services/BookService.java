@@ -29,7 +29,7 @@ public class BookService {
     }
 
     public Book getByBookTitle(String bookTitle){
-        return bookRepository.findByBookTitle();
+        return bookRepository.findByTitle(bookTitle);
     }
 
     public List<Book> getByGenre(Genre genre){

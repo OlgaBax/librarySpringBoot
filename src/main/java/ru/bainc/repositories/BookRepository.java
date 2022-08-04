@@ -10,7 +10,7 @@ import java.util.List;
 @Repository
 public interface BookRepository extends JpaRepository<Book, Long> {
 
-    Book findByBookTitle();
+    Book findByTitle(String bookTitle);
 
     //  @Modifying не нужна потому что это select запрос
     @Query(value = "select distinct b from Book b join fetch b.authors join fetch b.genre " +
