@@ -8,4 +8,6 @@ import ru.bainc.model.Author;
 public interface AuthorRepository extends JpaRepository<Author, Long> {
 
     Author getById(Long id);
+
+    Author findBySurName(String surName);
 }

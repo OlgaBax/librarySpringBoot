@@ -30,9 +30,9 @@ public class AuthorService {
         return authorRepository.getById(id);
     }
 
-//    public Author getByAuthorSurname(String surName){
-//        return authorRepository.findByAuthorSurname();
-//    }
+    public Author getByAuthorSurName(String surName){
+        return authorRepository.findBySurName(surName);
+    }
 
     public Author addAuthor(Author author){
         return authorRepository.save(author);
