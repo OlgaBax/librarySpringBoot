@@ -65,6 +65,7 @@ public class Book {
                inverseJoinColumns = @JoinColumn(name = "tag_id"))
     private Set<Tag> tags;
 
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "books_authors",
                joinColumns = @JoinColumn(name = "book_id"),
