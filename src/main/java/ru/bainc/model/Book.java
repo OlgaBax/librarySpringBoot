@@ -42,7 +42,6 @@ public class Book {
     private String yearOfEditionTranslate;
 
     @Column(name = "fileformatbook")
-    @Enumerated(value = EnumType.STRING)
     private FileFormatBook fileFormatBook;
 
     @Column(name = "pathtozipbook")
