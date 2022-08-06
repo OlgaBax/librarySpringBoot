@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class BookDto {
+public class BookOutDto {
     private Long id;
     private UUID uuid;
     private String title;
@@ -30,7 +30,7 @@ public class BookDto {
     private Set<String> tags;
     private Set<String> authors;
 
-    public BookDto(Book book) {
+    public BookOutDto(Book book) {
         this.id = book.getId();
         this.uuid = book.getUuid();
         this.title = book.getTitle();

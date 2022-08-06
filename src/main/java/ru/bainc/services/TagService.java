@@ -10,7 +10,6 @@ import java.util.List;
 
 @Slf4j
 @Service
-@Transactional
 public class TagService {
     private final TagRepository tagRepository;
 
@@ -33,14 +32,17 @@ public class TagService {
         return tag;
     }
 
+    @Transactional
     public void deleteTag(Tag tag){
         tagRepository.delete(tag);
     }
 
+    @Transactional
     public void deleteById(Long id){
         tagRepository.getById(id);
     }
 
+    @Transactional
     public Tag addTag(Tag tag){
         Tag tag1 = tagRepository.save(tag);
         return tag1;

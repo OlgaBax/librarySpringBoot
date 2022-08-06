@@ -12,7 +12,6 @@ import java.util.List;
 
 @Slf4j
 @Service
-@Transactional
 public class AuthorService {
 
     private final AuthorRepository authorRepository;
@@ -34,14 +33,17 @@ public class AuthorService {
         return authorRepository.findBySurName(surName);
     }
 
+    @Transactional
     public Author addAuthor(Author author){
         return authorRepository.save(author);
     }
 
+    @Transactional
     public void deleteById(Long id){
         authorRepository.deleteById(id);
     }
 
+    @Transactional
     public void deleteAuthor(Author author){
         deleteAuthor(author);
     }

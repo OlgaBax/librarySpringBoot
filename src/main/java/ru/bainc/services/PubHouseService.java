@@ -6,11 +6,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.bainc.model.PubHouse;
 import ru.bainc.repositories.PubHouseRepository;
+
 import java.util.List;
 
 @Slf4j
 @Service
-@Transactional
 public class PubHouseService {
     private final PubHouseRepository pubHouseRepository;
 
@@ -19,28 +19,31 @@ public class PubHouseService {
         this.pubHouseRepository = pubHouseRepository;
     }
 
-    public List<PubHouse> getAll(){
-       return pubHouseRepository.findAll();
+    public List<PubHouse> getAll() {
+        return pubHouseRepository.findAll();
     }
 
-    public PubHouse getById(Long id){
+    public PubHouse getById(Long id) {
         return pubHouseRepository.getById(id);
     }
 
-    public PubHouse getByPubHouseTitle(String pubHouseTitle){
+    public PubHouse getByPubHouseTitle(String pubHouseTitle) {
         return pubHouseRepository.findByPubHouseTitle(pubHouseTitle);
     }
 
-    public PubHouse addPubHouse(PubHouse pubHouse){
+    @Transactional
+    public PubHouse addPubHouse(PubHouse pubHouse) {
         PubHouse pubHouse1 = pubHouseRepository.save(pubHouse);
         return pubHouse1;
     }
 
-    public void deleteByPubHouseTitle(PubHouse pubHouse){
+    @Transactional
+    public void deleteByPubHouseTitle(PubHouse pubHouse) {
         pubHouseRepository.delete(pubHouse);
     }
 
-    public void deleteById(Long id){
+    @Transactional
+    public void deleteById(Long id) {
         pubHouseRepository.deleteById(id);
     }
 }
