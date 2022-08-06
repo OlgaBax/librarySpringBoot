@@ -92,7 +92,7 @@ public class BookService {
         book.setIsbnTranslate(bookInDto.getIsbnTranslate());
         book.setFileFormatBook(FileFormatBook.valueOf(bookInDto.getFileFormatBook()));
         book.setPathToZipBook(bookInDto.getPathToZipBook());
-        book.setGenre(genreService.getById(Long.parseLong(bookInDto.getGenreId())));
+        book.setGenre(genreService.getById(Long.parseLong(bookInDto.getGenreId())).orElse(null));//todo вставить проверку наличия жанра в базе
         book.setPubHouse(pubHouseService.getById(Long.parseLong(bookInDto.getPubHouseId())));
         book.setPubHouseTranslate(pubHouseService.getById(Long.parseLong(bookInDto.getPubHouseTranslateId())));
         book.setTags(bookInDto.getTagsId().stream()
