@@ -2,7 +2,6 @@ package ru.bainc.services;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -10,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.bainc.dto.GenreDto;
 import ru.bainc.model.Genre;
 import ru.bainc.repositories.GenreRepository;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -74,6 +72,7 @@ public class GenreService {
         return new ResponseEntity<>(new GenreDto(genre), HttpStatus.OK);
     }
 
+    @Transactional
     public ResponseEntity<GenreDto> addGenreFromFront(GenreDto genreDto) {
         Genre genre = getByGenreTitle(genreDto.getTitle());
         if (genre != null) {
@@ -92,7 +91,7 @@ public class GenreService {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-
+    @Transactional
     public ResponseEntity<?> deleteByIdFromFront(Long id) {
         try {
             deleteGenreById(id);
@@ -102,6 +101,7 @@ public class GenreService {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @Transactional
     public ResponseEntity<?> deleteByTitleToFront(GenreDto genreDto) {
         Genre genre = getByGenreTitle(genreDto.getTitle());
         if (genre != null) {

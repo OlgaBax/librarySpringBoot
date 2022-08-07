@@ -43,5 +43,8 @@ create table public.books_tags(book_id bigint not null, tag_id bigint not null,
 --changeset Bainc:008
 alter table public.books add constraint fk_book_genre foreign key (genre_id) references public.genres(id);
 
+--changeset Bainc:009
+alter table public.books add constraint fk_book_pubHouse foreign key (pubHouse_id) references public.pubhouses(id);
+
 
 
