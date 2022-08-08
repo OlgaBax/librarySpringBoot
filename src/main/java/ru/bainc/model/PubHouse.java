@@ -21,4 +21,8 @@ public class PubHouse {
 
     @Column(name = "title")
     private String pubHouseTitle;
+
+    public PubHouse(String pubHouseTitle) {
+        this.pubHouseTitle = pubHouseTitle;
+    }
 }
