@@ -10,10 +10,10 @@ import ru.bainc.model.PubHouse;
 @NoArgsConstructor
 public class PubHouseDto {
     private Long id;
-    private String pubHouseTitle;
+    private String title;
 
     public PubHouseDto (PubHouse pubHouse){
-         this.pubHouseTitle = pubHouse.getPubHouseTitle();
+         this.title = pubHouse.getPubHouseTitle();
          this.id = pubHouse.getId();
     }
 }

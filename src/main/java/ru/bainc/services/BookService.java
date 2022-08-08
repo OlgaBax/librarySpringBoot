@@ -93,8 +93,8 @@ public class BookService {
         book.setFileFormatBook(FileFormatBook.valueOf(bookInDto.getFileFormatBook()));
         book.setPathToZipBook(bookInDto.getPathToZipBook());
         book.setGenre(genreService.getById(Long.parseLong(bookInDto.getGenreId())).orElse(null));//todo вставить проверку наличия жанра в базе
-        book.setPubHouse(pubHouseService.getById(Long.parseLong(bookInDto.getPubHouseId())));
-        book.setPubHouseTranslate(pubHouseService.getById(Long.parseLong(bookInDto.getPubHouseTranslateId())));
+        book.setPubHouse(pubHouseService.getById(Long.parseLong(bookInDto.getPubHouseId())).orElse(null));
+        book.setPubHouseTranslate(pubHouseService.getById(Long.parseLong(bookInDto.getPubHouseTranslateId())).orElse(null));
         book.setTags(bookInDto.getTagsId().stream()
                 .map(tag-> tagService.getById(Long.parseLong(tag)))
                 .collect(Collectors.toSet()));
