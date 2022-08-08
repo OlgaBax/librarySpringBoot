@@ -61,11 +61,6 @@ public class BookService {
         return bookRepository.getByTag(tag);
     }
 
-//    @Transactional
-//    public Book addBook(Book book) {
-//        return bookRepository.save(book);
-//    }
-
     @Transactional
     public void deleteById(Long id) {
         bookRepository.deleteById(id);
@@ -96,7 +91,7 @@ public class BookService {
         book.setPubHouse(pubHouseService.getById(Long.parseLong(bookInDto.getPubHouseId())).orElse(null));
         book.setPubHouseTranslate(pubHouseService.getById(Long.parseLong(bookInDto.getPubHouseTranslateId())).orElse(null));
         book.setTags(bookInDto.getTagsId().stream()
-                .map(tag-> tagService.getById(Long.parseLong(tag)))
+                .map(tag-> tagService.getById(Long.parseLong(tag)).orElse(null))
                 .collect(Collectors.toSet()));
         book.setAuthors(bookInDto.getAuthorsId()
                 .stream()
