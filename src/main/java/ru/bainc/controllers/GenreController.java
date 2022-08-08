@@ -1,12 +1,10 @@
 package ru.bainc.controllers;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.bainc.dto.GenreDto;
 import ru.bainc.services.GenreService;
-
 import java.util.List;
 
 @RestController
@@ -19,6 +17,7 @@ public class GenreController {
     public GenreController(GenreService genreService) {
         this.genreService = genreService;
     }
+
     @GetMapping
     public ResponseEntity<List<GenreDto>> getAllGenres (){
         return genreService.getAllGenresToFront();

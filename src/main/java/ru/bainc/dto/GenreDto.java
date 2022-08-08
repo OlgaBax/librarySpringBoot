@@ -8,7 +8,6 @@ import ru.bainc.model.Genre;
 @Getter
 @Setter
 @NoArgsConstructor
-
 public class GenreDto {
 
     private Long id;

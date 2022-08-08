@@ -11,11 +11,11 @@ import ru.bainc.model.Tag;
 public class TagDto {
 
     private Long id;
-    private String tagTitle;
+    private String title;
 
     public TagDto(Tag tag){
         this.id = tag.getId();
-        this.tagTitle = tag.getTagTitle();
+        this.title = tag.getTagTitle();
     }
 
 }
