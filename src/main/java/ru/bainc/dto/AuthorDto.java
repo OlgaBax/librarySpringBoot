@@ -3,6 +3,7 @@ package ru.bainc.dto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.http.HttpStatus;
 import ru.bainc.model.Author;
 
 @Getter
@@ -19,6 +20,8 @@ public class AuthorDto {
         this.id = author.getId();
         this.name = author.getName();
         this.middleName = author.getMiddleName();
-        this.surName = author.getSurName();
+        this.surName = author.getSurName() ;
     }
+
+
 }

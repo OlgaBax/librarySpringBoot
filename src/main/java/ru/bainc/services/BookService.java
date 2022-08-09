@@ -95,7 +95,7 @@ public class BookService {
                 .collect(Collectors.toSet()));
         book.setAuthors(bookInDto.getAuthorsId()
                 .stream()
-                .map(author-> authorService.getById(Long.parseLong(author)))
+                .map(author-> authorService.getById(Long.parseLong(author)).orElse(null))
                 .collect(Collectors.toSet()));
 
         return bookRepository.save(book);

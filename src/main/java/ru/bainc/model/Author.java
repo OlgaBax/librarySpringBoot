@@ -4,7 +4,6 @@ package ru.bainc.model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 import javax.persistence.*;
 import java.util.Set;
 
@@ -32,4 +31,13 @@ public class Author {
     @ManyToMany(mappedBy = "authors")
     private Set<Book> books;
 
+    public Author(String surName) {
+        this.surName = surName;
+    }
+
+    public Author(String surName, String name, String middleName) {
+        this.surName = surName;
+        this.name = name;
+        this.middleName = middleName;
+    }
 }
