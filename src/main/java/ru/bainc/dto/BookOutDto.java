@@ -45,8 +45,11 @@ public class BookOutDto {
         this.pubHouse = book.getPubHouse().getPubHouseTitle();
         this.pubHouseTranslate = book.getPubHouseTranslate().getPubHouseTitle();
         this.tags = book.getTags().stream().map(tag -> tag.getTagTitle()).collect(Collectors.toSet());
-        this.authors = book.getAuthors().stream().map(author ->author.getSurName() + " "
+        this.authors = book.getAuthors()
+                .stream()
+                .map(author ->author.getSurName() + " "
                 + author.getName() + " "
-                + (author.getMiddleName() == null? " " : author.getMiddleName())).collect(Collectors.toSet());
+                + (author.getMiddleName() == null? " " : author.getMiddleName()))
+                .collect(Collectors.toSet());
     }
 }

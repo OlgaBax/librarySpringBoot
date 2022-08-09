@@ -13,7 +13,7 @@ public class PubHouseDto {
     private String title;
 
     public PubHouseDto (PubHouse pubHouse){
-         this.title = pubHouse.getPubHouseTitle();
-         this.id = pubHouse.getId();
+        this.id = pubHouse.getId();
+        this.title = pubHouse.getPubHouseTitle();
     }
 }
