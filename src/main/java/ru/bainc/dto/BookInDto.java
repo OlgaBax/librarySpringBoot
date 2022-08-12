@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -24,7 +25,7 @@ public class BookInDto {
     private String genreId;
     private String pubHouseId;
     private String pubHouseTranslateId;
-    private Set<String> tagsId;
-    private Set<String> authorsId;
+    private List<String> tagsId;
+    private List<String> authorsId;
 
 }

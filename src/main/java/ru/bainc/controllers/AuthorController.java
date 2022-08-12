@@ -29,19 +29,10 @@ public class AuthorController {
     }
 
     @GetMapping("/surname")
-    public ResponseEntity<AuthorDto> getBySurName(@RequestBody AuthorDto authorDto){
+    public ResponseEntity<List<AuthorDto>> getBySurName(@RequestBody AuthorDto authorDto){
         return authorService.getBySurNameToFront(authorDto);
     }
 
-    @GetMapping("/name")
-    public ResponseEntity<AuthorDto> getByName(@RequestBody AuthorDto authorDto){
-        return authorService.getByNameFromFront(authorDto);
-    }
-
-   @GetMapping("/middlename")
-    public ResponseEntity<AuthorDto> getByMiddleName(@RequestBody AuthorDto authorDto){
-        return authorService.getByMiddleNameFromFront(authorDto);
-   }
 
    @PostMapping
     public ResponseEntity<AuthorDto> addAuthor(@RequestBody AuthorDto authorDto){
@@ -53,8 +44,8 @@ public class AuthorController {
         return authorService.deleteByIdFromFront(id);
    }
 
-   @DeleteMapping("/surname")
-    public ResponseEntity<?> deleteBySurname(@RequestBody AuthorDto authorDto){
-        return authorService.deleteBySurNameToFront(authorDto);
+   @DeleteMapping("/fio")
+    public ResponseEntity<?> deleteByFio(@RequestBody AuthorDto authorDto){
+        return authorService.deleteByFioToFront(authorDto);
    }
 }

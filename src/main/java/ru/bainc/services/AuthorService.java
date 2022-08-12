@@ -25,17 +25,19 @@ public class AuthorService {
         this.authorRepository = authorRepository;
     }
 
+    @Transactional
     public List<Author> getAllAuthors() {
         return authorRepository.findAll();
     }
 
+    @Transactional
     public Optional<Author> getById(Long id) {
         return authorRepository.findById(id);
     }
 
-    public Author getByAuthorSurName(String surName) {
-        Author author = authorRepository.findBySurName(surName);
-        return author;
+    @Transactional
+    public List<Author> getByAuthorSurName(String surName) {
+        return authorRepository.findBySurName(surName);
     }
 
 
@@ -49,6 +51,7 @@ public class AuthorService {
         authorRepository.delete(author);
     }
 
+    @Transactional
     public ResponseEntity<List<AuthorDto>> getAllAuthorToFront() {
         return new ResponseEntity<>(getAllAuthors()
                 .stream()
@@ -56,6 +59,7 @@ public class AuthorService {
                 .collect(Collectors.toList()), HttpStatus.OK);
     }
 
+    @Transactional
     public ResponseEntity<AuthorDto> getByIdFromFront(Long id) {
         Author author = getById(id).orElse(null);
         if (author == null) {
@@ -65,40 +69,14 @@ public class AuthorService {
         }
     }
 
-    public ResponseEntity<AuthorDto> getBySurNameToFront(AuthorDto authorDto) {
-        Author author = getByAuthorSurName(authorDto.getSurName());
-        if (author != null) {
-            return new ResponseEntity<>(new AuthorDto(getByAuthorSurName(author.getSurName())), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-    }
+    @Transactional
+    public ResponseEntity<List<AuthorDto>> getBySurNameToFront(AuthorDto authorDto) {
+        return new ResponseEntity<>(getByAuthorSurName(authorDto.getSurName())
+                .stream()
+                .map(author -> new AuthorDto(author))
+                .collect(Collectors.toList()), HttpStatus.OK);
+   }
 
-    public Author getByAuthorName(String name) {
-        return authorRepository.findByName(name);
-    }
-
-    public ResponseEntity<AuthorDto> getByNameFromFront(AuthorDto authorDto) {
-        Author author = getByAuthorName(authorDto.getName());
-        if (author == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } else {
-            return new ResponseEntity<>(new AuthorDto(getByAuthorName(author.getName())), HttpStatus.OK);
-        }
-    }
-
-    public Author getByMiddleName(String middleName) {
-        return authorRepository.findByMiddleName(middleName);
-    }
-
-    public ResponseEntity<AuthorDto> getByMiddleNameFromFront(AuthorDto authorDto) {
-        Author author = getByMiddleName(authorDto.getMiddleName());
-        if (author == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } else {
-            return new ResponseEntity<>(new AuthorDto(getByMiddleName(author.getMiddleName())), HttpStatus.OK);
-        }
-    }
 
     @Transactional
     public Author addAuthor(Author author) {
@@ -106,15 +84,18 @@ public class AuthorService {
     }
 
     @Transactional
-    public ResponseEntity<AuthorDto> addAuthorFromFront(AuthorDto authorDto) {
-        Author author = getByAuthorSurName(authorDto.getSurName());
-        if (author != null && getByAuthorName(authorDto.getName()) != null
-                && getByMiddleName(authorDto.getMiddleName()) != null) {
-            log.info("Такой автор уже существует");
-            return new ResponseEntity<>(new AuthorDto(author), HttpStatus.OK);
-        } else {
+    public Author getByFio(String surname, String name, String middleName){
+        return authorRepository.findByFio(surname, name, middleName);
+    }
+
+    @Transactional
+    public ResponseEntity<AuthorDto> addAuthorFromFront(AuthorDto authorDto){
+        Author author = getByFio(authorDto.getSurName(),authorDto.getName(),authorDto.getMiddleName());
+        if(author != null){
+            return new ResponseEntity<>(new AuthorDto(author),HttpStatus.OK);
+        }else{
             return new ResponseEntity<>(new AuthorDto(addAuthor
-                    (new Author(authorDto.getSurName(), authorDto.getName(), authorDto.getMiddleName()))), HttpStatus.OK);
+                    (new Author(authorDto.getSurName(), authorDto.getName(), authorDto.getMiddleName()))),HttpStatus.OK);
         }
     }
 
@@ -130,17 +111,15 @@ public class AuthorService {
     }
 
     @Transactional
-    public ResponseEntity<?> deleteBySurNameToFront(AuthorDto authorDto) {
-        Author author = getByAuthorSurName(authorDto.getSurName());
+    public ResponseEntity<?> deleteByFioToFront(AuthorDto authorDto) {
+        Author author = getByFio(authorDto.getSurName(), authorDto.getName(), authorDto.getMiddleName());
         if (author == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } else {
             deleteAuthor(author);
-            log.info("Author with surname {} deleted", authorDto.getSurName());
             return new ResponseEntity<>(HttpStatus.OK);
         }
     }
-
 }
 
 
