@@ -33,30 +33,38 @@ public class BookService {
         this.genreService = genreService;
     }
 
+    @Transactional
     public List<Book> getAllBooks() {
         return bookRepository.findAll();
     }
 
+    @Transactional
     public Book getById(Long id) {
         return bookRepository.getById(id);
     }
 
+    @Transactional
     public Book getByBookTitle(String bookTitle) {
         return bookRepository.findByTitle(bookTitle);
     }
 
+
+    @Transactional
     public List<Book> getByGenre(Genre genre) {
         return bookRepository.getByGenre(genre);
     }
 
+    @Transactional
     public List<Book> getByPubHouse(PubHouse pubHouse) {
         return bookRepository.getByPubHouse(pubHouse);
     }
 
+    @Transactional
     public List<Book> getByAuthor(Author author) {
         return bookRepository.getByAuthor(author);
     }
 
+    @Transactional
     public List<Book> getByTag(Tag tag) {
         return bookRepository.getByTag(tag);
     }
@@ -71,6 +79,7 @@ public class BookService {
         bookRepository.delete(book);
     }
 
+    @Transactional
     public List<BookOutDto> getAllBooksToFront() {
         return getAllBooks().stream().map(book -> new BookOutDto(book)).collect(Collectors.toList());
     }

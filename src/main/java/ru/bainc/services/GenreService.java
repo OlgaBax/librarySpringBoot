@@ -25,14 +25,17 @@ public class GenreService {
         this.genreRepository = genreRepository;
     }
 
+    @Transactional
     public List<Genre> getAll() {
         return genreRepository.findAll();
     }
 
+    @Transactional
     public Optional<Genre> getById(Long id) {
         return genreRepository.findById(id);
     }
 
+    @Transactional
     public Genre getByGenreTitle(String genreTitle) {
         Genre genre = genreRepository.findByGenreTitle(genreTitle);
         log.info("Genre with title {} found", genreTitle);
@@ -59,11 +62,13 @@ public class GenreService {
         genreRepository.delete(genre);
     }
 
+    @Transactional
     public ResponseEntity<List<GenreDto>> getAllGenresToFront() {
         return new ResponseEntity<>(getAll()
                 .stream().map(genre -> new GenreDto(genre)).collect(Collectors.toList()), HttpStatus.OK);
     }
 
+    @Transactional
     public ResponseEntity<GenreDto> getByIdToFront(Long id) {
         Genre genre = getById(id).orElse(null);
         if (genre == null) {
@@ -72,6 +77,7 @@ public class GenreService {
         return new ResponseEntity<>(new GenreDto(genre), HttpStatus.OK);
     }
 
+    @Transactional
     public ResponseEntity<GenreDto> getByTitleToFront(GenreDto genreDto) {
         Genre genre = getByGenreTitle(genreDto.getTitle());
         if (genre != null) {
@@ -109,7 +115,6 @@ public class GenreService {
         if (genre != null) {
             deleteGenreByTitle(genre);
         }
-
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

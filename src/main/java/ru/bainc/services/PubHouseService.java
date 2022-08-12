@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.bainc.dto.PubHouseDto;
 import ru.bainc.model.PubHouse;
 import ru.bainc.repositories.PubHouseRepository;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -24,14 +23,17 @@ public class PubHouseService {
         this.pubHouseRepository = pubHouseRepository;
     }
 
+    @Transactional
     public List<PubHouse> getAll() {
         return pubHouseRepository.findAll();
     }
 
+    @Transactional
     public Optional<PubHouse> getById(Long id) {
         return pubHouseRepository.findById(id);
     }
 
+    @Transactional
     public PubHouse getByPubHouseTitle(String pubHouseTitle) {
         return pubHouseRepository.findByPubHouseTitle(pubHouseTitle);
     }
@@ -52,11 +54,13 @@ public class PubHouseService {
         pubHouseRepository.deleteById(id);
     }
 
+    @Transactional
     public ResponseEntity<List<PubHouseDto>> getAllPubHousesToFront() {
         return new ResponseEntity<>(getAll()
                 .stream().map(pubHouse -> new PubHouseDto(pubHouse)).collect(Collectors.toList()), HttpStatus.OK);
     }
 
+    @Transactional
     public ResponseEntity<PubHouseDto> getByIdToFront(Long id) {
         PubHouse pubHouse = getById(id).orElse(null);
         if (pubHouse == null) {
@@ -66,6 +70,7 @@ public class PubHouseService {
         }
     }
 
+    @Transactional
     public ResponseEntity<PubHouseDto> getByTitleToFront(PubHouseDto pubHouseDto) {
         PubHouse pubHouse = getByPubHouseTitle(pubHouseDto.getTitle());
         if (pubHouse != null) {

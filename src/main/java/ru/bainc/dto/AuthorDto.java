@@ -3,8 +3,9 @@ package ru.bainc.dto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.http.HttpStatus;
 import ru.bainc.model.Author;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -24,4 +25,7 @@ public class AuthorDto {
     }
 
 
+    public AuthorDto(List<Author> authors) {
+
+    }
 }

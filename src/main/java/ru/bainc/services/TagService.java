@@ -23,14 +23,17 @@ public class TagService {
         this.tagRepository = tagRepository;
     }
 
+    @Transactional
     public List<Tag> getAll() {
         return tagRepository.findAll();
     }
 
+    @Transactional
     public Optional<Tag> getById(Long id) {
         return tagRepository.findById(id);
     }
 
+    @Transactional
     public Tag getByTagTitle(String tagTitle) {
         Tag tag = tagRepository.findByTagTitle(tagTitle);
         log.info("Tag with title {} found", tagTitle);
@@ -53,14 +56,16 @@ public class TagService {
         return tag1;
     }
 
+    @Transactional
     public ResponseEntity<List<TagDto>> getAllTagsToFront() {
         return new ResponseEntity<>
-                (tagRepository.findAll()
+                (getAll()
                         .stream()
                         .map(tag -> new TagDto(tag))
                         .collect(Collectors.toList()), HttpStatus.OK);
     }
 
+    @Transactional
     public ResponseEntity<TagDto> getByIdToFront(Long id) {
         Tag tag = getById(id).orElse(null);
         if (tag == null) {
@@ -70,6 +75,7 @@ public class TagService {
         }
     }
 
+    @Transactional
     public ResponseEntity<TagDto> getByTitleFromFront(TagDto tagDto) {
         Tag tag = getByTagTitle(tagDto.getTitle());
         if (tag != null) {
