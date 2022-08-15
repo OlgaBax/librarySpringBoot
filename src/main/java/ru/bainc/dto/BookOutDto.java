@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ru.bainc.model.Book;
+import ru.bainc.model.Tag;
+
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -44,7 +46,10 @@ public class BookOutDto {
         this.genre = book.getGenre().getGenreTitle();
         this.pubHouse = book.getPubHouse().getPubHouseTitle();
         this.pubHouseTranslate = book.getPubHouseTranslate().getPubHouseTitle();
-        this.tags = book.getTags().stream().map(tag -> tag.getTagTitle()).collect(Collectors.toSet());
+        this.tags = book.getTags()
+                .stream()
+                .map(tag -> tag.getTagTitle())
+                .collect(Collectors.toSet());
         this.authors = book.getAuthors()
                 .stream()
                 .map(author ->author.getSurName() + " "
@@ -52,4 +57,5 @@ public class BookOutDto {
                 + (author.getMiddleName() == null? " " : author.getMiddleName()))
                 .collect(Collectors.toSet());
     }
+
 }

@@ -35,15 +35,19 @@ public class AuthorService {
         return authorRepository.findById(id);
     }
 
-    @Transactional
-    public List<Author> getByAuthorSurName(String surName) {
-        return authorRepository.findBySurName(surName);
-    }
-
 
     @Transactional
     public void deleteById(Long id) {
         authorRepository.deleteById(id);
+    }
+    @Transactional
+    public ResponseEntity<AuthorDto> getByIdFromFront(Long id) {
+        Author author = getById(id).orElse(null);
+        if (author == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } else {
+            return new ResponseEntity<>(new AuthorDto(author), HttpStatus.OK);
+        }
     }
 
     @Transactional
@@ -59,16 +63,11 @@ public class AuthorService {
                 .collect(Collectors.toList()), HttpStatus.OK);
     }
 
-    @Transactional
-    public ResponseEntity<AuthorDto> getByIdFromFront(Long id) {
-        Author author = getById(id).orElse(null);
-        if (author == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } else {
-            return new ResponseEntity<>(new AuthorDto(author), HttpStatus.OK);
-        }
-    }
 
+    @Transactional
+    public List<Author> getByAuthorSurName(String surName) {
+        return authorRepository.findBySurName(surName);
+    }
     @Transactional
     public ResponseEntity<List<AuthorDto>> getBySurNameToFront(AuthorDto authorDto) {
         return new ResponseEntity<>(getByAuthorSurName(authorDto.getSurName())
