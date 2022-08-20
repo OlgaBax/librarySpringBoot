@@ -39,6 +39,7 @@ public class BookService {
     public List<Book> getAllBooks() {
         return bookRepository.findAll();
     }
+
     @Transactional
     public List<BookOutDto> getAllBooksToFront() {
         return getAllBooks().stream().map(book -> new BookOutDto(book)).collect(Collectors.toList());
@@ -112,44 +113,56 @@ public class BookService {
     public void deleteById(Long id) {
         bookRepository.deleteById(id);
     }
+
     @Transactional
-    public ResponseEntity<?>deleteByIdToFront(Long id){
-        try{
+    public ResponseEntity<?> deleteByIdToFront(Long id) {
+        try {
             deleteById(id);
-        } catch (Exception e){
+        } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(HttpStatus.OK);
     }
-//_____________________________________________________________________________________________//
+
+    //_____________________________________________________________________________________________//
     @Transactional
     public ResponseEntity<List<BookOutDto>> getByTagFromFront(BookSearchDto bookSearchDto) {
-        List<Tag> tags = new ArrayList<>();
-        for (Integer id: bookSearchDto.getTagsListId()) {
-            Tag tag = tagService.getById(id.longValue()).get();
-            tags.add(tag);
-        }
         List<Book> books;
-        Set<Long> idTags = new HashSet<>();
-        for (Tag tag: tags) {
-            idTags.addAll(bookRepository.getByTagsList(tag));
-        }
-        books = bookRepository.getByListId(new ArrayList<>(idTags));
-        if(books == null){
+        books = bookRepository.getByTagId(bookSearchDto.getIdTag());
+        if (books == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }else {
-            return new ResponseEntity<>(books
-                    .stream()
-                    .map(book -> new BookOutDto(book))
-                    .collect(Collectors.toList()), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(books.stream()
+            .map(book -> new BookOutDto(book)).collect(Collectors.toList()), HttpStatus.OK);
         }
     }
+
+//        List<Tag> tags = new ArrayList<>();
+//        for (Long id : bookSearchDto.getTagsListId()) {
+//            Tag tag = tagService.getById(id).get();//(id.longValue()).get();
+//            tags.add(tag);
+//        }
+//        List<Book> books;
+//        Set<Long> idTags = new HashSet<>();
+//        for (Tag tag : tags) {
+//        }
+//        idTags.addAll(bookRepository.getByTagsList(tag));
+//
+//        books = bookRepository.getByListId(new ArrayList<>(idTags));
+//        if (books == null) {
+//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//        } else {
+//            return new ResponseEntity<>(books
+//                    .stream()
+//                    .map(book -> new BookOutDto(book))
+//                    .collect(Collectors.toList()), HttpStatus.OK);
+//        }
+//    }
 
 //    @Transactional
 //    public List<Book> getByAuthor(Author author) {
 //        return bookRepository.getByAuthor(author);
 //    }
-
 
 
     @Transactional

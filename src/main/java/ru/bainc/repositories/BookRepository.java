@@ -16,16 +16,29 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     List<Book> getByGenre(@Param("genre") Genre genre);
 
     @Query("select b from Book b where b.pubHouse=:pubHouse")
-    List<Book>getByPubHouse(@Param("pubHouse") PubHouse pubHouse);
+    List<Book> getByPubHouse(@Param("pubHouse") PubHouse pubHouse);
+
+//___________________________________________________________________________________________//
+// работает
+    @Query(value = "select * from books b where b.id in (select book_id from books_tags where tag_id in(:idTag)) order by b.id", nativeQuery = true)
+    List<Book> getByTagId(@Param("idTag") Long idTag);
+
+//работает
+//@Query(value = "select * from books b where ? in (select tag_id from books_tags where book_id=b.id) order by b.id", nativeQuery = true)
+//List<Book> getByTagId(@Param("idTag") Long id);
 
 
-    @Query("select b.id id from Book b  " +
-            "right join fetch b.tags t where :tag in t")
-    List<Long>getByTagsList(@Param("tag") Tag tag);
+
+//    @Query(value = "select * from books b inner join books_tags on tag_id in(:idTag)", nativeQuery = true)
+//    List<Book>getByTagId(@Param("idTag")List<Long> id);
+
+//    @Query("select b.id id from Book b  " +
+//            "right join fetch b.tags t where :tag in t")
+//    List<Long>getByTagsList(@Param("tag") Tag tag);
 
 
-    @Query("select b from Book b where b.id in :idList")
-    List<Book>getByListId(@Param("idList") List<Long> idList);
+//    @Query("select b from Book b where b.id in :idList")
+//    List<Book>getByListId(@Param("idList") List<Integer> idList);
 
 
 //    @Query(value = "select distinct b from Book b join fetch b.authors join fetch b.genre " +
