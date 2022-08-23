@@ -32,6 +32,11 @@ public class BookController {
         return bookService.getByTitleFromFront(bookOutDto);
     }
 
+    @GetMapping("/partTitle")
+    public ResponseEntity<List<BookOutDto>>getByPartTitle(@RequestBody BookSearchDto bookSearchDto){
+        return bookService.getBookByPartTitleFromFront(bookSearchDto);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<BookOutDto> getById(@PathVariable Long id){
         return bookService.getByIdFromFront(id);
@@ -52,11 +57,17 @@ public class BookController {
         return bookService.deleteByIdToFront(id);
     }
 
-    //______________________________________________________________________________________________________//
     @GetMapping("/tag")
     public ResponseEntity<List<BookOutDto>>getByTag(@RequestBody BookSearchDto bookSearchDto){
         return bookService.getByTagFromFront(bookSearchDto);
     }
+
+    @GetMapping("/partAuthorSurname")
+    public ResponseEntity<List<BookOutDto>>getByPartAuthorSurname(@RequestBody BookSearchDto bookSearchDto){
+        return bookService.getByPartAuthorSurnameFromFront(bookSearchDto);
+    }
+
+//________________________________________________________________________________________
     @PostMapping
     public ResponseEntity<String> addBook(@RequestBody BookInDto bookInDto) {
         if (bookService.addBook(bookInDto) != null) {
