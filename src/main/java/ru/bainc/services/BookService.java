@@ -66,16 +66,18 @@ public class BookService {
     }
 
     @Transactional
+    public List<Book> getBookByPartTitle(String partTitle) {
+        return bookRepository.findBookByPartTitle("%"+partTitle.toLowerCase()+"%");
+    }
+
+
+    @Transactional
     public ResponseEntity<List<BookOutDto>> getByTitleFromFront(BookOutDto bookOutDto) {
         return new ResponseEntity<>(getBookByTitle(bookOutDto.getTitle())
                 .stream()
                 .map(book -> new BookOutDto(book)).collect(Collectors.toList()), HttpStatus.OK);
     }
 
-    @Transactional
-    public List<Book> getBookByPartTitle(String partTitle) {
-        return bookRepository.findBookByPartTitle(partTitle);
-    }
 
     @Transactional
     public ResponseEntity<List<BookOutDto>> getBookByPartTitleFromFront(BookSearchDto bookSearchDto) {
@@ -143,7 +145,7 @@ public class BookService {
 
     @Transactional
     public List<Book> getByPartAuthorSurname(String partSurname) {
-        return bookRepository.getBookByPartAuthorSurname(partSurname);
+        return bookRepository.getBookByPartAuthorSurname("%"+partSurname.toLowerCase()+"%");
     }
 
     @Transactional

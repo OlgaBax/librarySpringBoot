@@ -13,12 +13,12 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     List<Book> findByTitle(String bookTitle);
 
     //hql запрос
-    @Query("select b from Book b where b.title like %:partTitle%")
-    List<Book> findBookByPartTitle(@Param("partTitle") String partTitle);
+//    @Query("select b from Book b where b.title like %:partTitle%")
+//    List<Book> findBookByPartTitle(@Param("partTitle") String partTitle);
 
 //    нативный запрос. Работает.
-//    @Query(value = "select * from books b where b.title like %:partTitle%", nativeQuery = true)
-//    List<Book> findBookByPartTitle(@Param("partTitle") String partTitle);
+    @Query(value = "select * from books b where lower(b.title) like :partTitle", nativeQuery = true)
+    List<Book> findBookByPartTitle(@Param("partTitle") String partTitle);
 
 
 
@@ -35,10 +35,10 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     // Вариант Алексея
     @Query(value = "select * from books b where :idTag in (select tag_id from books_tags where book_id=b.id)", nativeQuery = true)
     List<Book> getByTagId(@Param("idTag") Long idTag);
-//______________________________________________________________________________________________________//
+
     @Query(value = "select * from books b where b.id in " +
             "(select book_id from books_authors where author_id in " +
-            "(select a.id from authors a where a.surname like %:partSurname%))", nativeQuery = true)
+            "(select a.id from authors a where lower (a.surname) like :partSurname))", nativeQuery = true)
     List<Book>getBookByPartAuthorSurname(@Param("partSurname") String partSurname);
 
 //    @Query(value = "select distinct b from Book b join fetch b.authors join fetch b.genre " +
