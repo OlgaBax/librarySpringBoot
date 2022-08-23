@@ -8,7 +8,10 @@ import java.util.List;
 @Getter
 @Setter
 public class BookSearchDto {
-//      private List<Long> tagsListId;
+      private List<Long> tagsListId;
       private Long idTag;
-//      private Tag tag;
+      private String partTitle;
+      private String partSurname;
+
+
 }

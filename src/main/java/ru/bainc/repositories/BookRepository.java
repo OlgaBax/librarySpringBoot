@@ -12,34 +12,34 @@ public interface BookRepository extends JpaRepository<Book, Long> {
 
     List<Book> findByTitle(String bookTitle);
 
+    //hql запрос
+    @Query("select b from Book b where b.title like %:partTitle%")
+    List<Book> findBookByPartTitle(@Param("partTitle") String partTitle);
+
+//    нативный запрос. Работает.
+//    @Query(value = "select * from books b where b.title like %:partTitle%", nativeQuery = true)
+//    List<Book> findBookByPartTitle(@Param("partTitle") String partTitle);
+
+
+
     @Query("select b from Book b where b.genre=:genre")
     List<Book> getByGenre(@Param("genre") Genre genre);
 
     @Query("select b from Book b where b.pubHouse=:pubHouse")
     List<Book> getByPubHouse(@Param("pubHouse") PubHouse pubHouse);
 
-//___________________________________________________________________________________________//
-// работает
-    @Query(value = "select * from books b where b.id in (select book_id from books_tags where tag_id in(:idTag)) order by b.id", nativeQuery = true)
+//    мой вариант
+//    @Query(value = "select * from books b where b.id in (select book_id from books_tags where tag_id=:idTag)", nativeQuery = true)
+//    List<Book> getByTagId(@Param("idTag") Long idTag);
+
+    // Вариант Алексея
+    @Query(value = "select * from books b where :idTag in (select tag_id from books_tags where book_id=b.id)", nativeQuery = true)
     List<Book> getByTagId(@Param("idTag") Long idTag);
-
-//работает
-//@Query(value = "select * from books b where ? in (select tag_id from books_tags where book_id=b.id) order by b.id", nativeQuery = true)
-//List<Book> getByTagId(@Param("idTag") Long id);
-
-
-
-//    @Query(value = "select * from books b inner join books_tags on tag_id in(:idTag)", nativeQuery = true)
-//    List<Book>getByTagId(@Param("idTag")List<Long> id);
-
-//    @Query("select b.id id from Book b  " +
-//            "right join fetch b.tags t where :tag in t")
-//    List<Long>getByTagsList(@Param("tag") Tag tag);
-
-
-//    @Query("select b from Book b where b.id in :idList")
-//    List<Book>getByListId(@Param("idList") List<Integer> idList);
-
+//______________________________________________________________________________________________________//
+    @Query(value = "select * from books b where b.id in " +
+            "(select book_id from books_authors where author_id in " +
+            "(select a.id from authors a where a.surname like %:partSurname%))", nativeQuery = true)
+    List<Book>getBookByPartAuthorSurname(@Param("partSurname") String partSurname);
 
 //    @Query(value = "select distinct b from Book b join fetch b.authors join fetch b.genre " +
 //            "join fetch b.pubHouse " +

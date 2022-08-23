@@ -1,5 +1,6 @@
 package ru.bainc.services;
 
+import liquibase.pro.packaged.B;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,7 +12,6 @@ import ru.bainc.dto.BookOutDto;
 import ru.bainc.dto.BookSearchDto;
 import ru.bainc.model.*;
 import ru.bainc.repositories.BookRepository;
-
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -61,17 +61,31 @@ public class BookService {
     }
 
     @Transactional
-    public List<Book> getByBookByTitle(String bookTitle) {
+    public List<Book> getBookByTitle(String bookTitle) {
         return bookRepository.findByTitle(bookTitle);
     }
 
     @Transactional
     public ResponseEntity<List<BookOutDto>> getByTitleFromFront(BookOutDto bookOutDto) {
-        return new ResponseEntity<>(getByBookByTitle(bookOutDto.getTitle())
+        return new ResponseEntity<>(getBookByTitle(bookOutDto.getTitle())
                 .stream()
                 .map(book -> new BookOutDto(book)).collect(Collectors.toList()), HttpStatus.OK);
     }
 
+    @Transactional
+    public List<Book> getBookByPartTitle(String partTitle) {
+        return bookRepository.findBookByPartTitle(partTitle);
+    }
+
+    @Transactional
+    public ResponseEntity<List<BookOutDto>> getBookByPartTitleFromFront(BookSearchDto bookSearchDto) {
+            return new ResponseEntity<>(getBookByPartTitle(bookSearchDto.getPartTitle())
+                    .stream()
+                    .map(book -> new BookOutDto(book))
+                    .sorted((x1, x2) -> x1.getId().compareTo(x2.getId()))
+                    .collect(Collectors.toList())
+                    , HttpStatus.OK);
+        }
 
     @Transactional
     public List<Book> getBookByGenre(Genre genre) {
@@ -109,6 +123,38 @@ public class BookService {
         }
     }
 
+
+    @Transactional
+    public ResponseEntity<List<BookOutDto>> getByTagFromFront(BookSearchDto bookSearchDto) {
+        Set<Book> books = new HashSet<>();
+        for (Long id : bookSearchDto.getTagsListId()) {
+            List<Book> tempList = bookRepository.getByTagId(id);
+            books.addAll(tempList);
+        }
+        if (books == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } else {
+            return new ResponseEntity<>(books
+                    .stream()
+                    .map(book -> new BookOutDto(book)).sorted((x1, x2) -> x1.getId().compareTo(x2.getId()))
+                    .collect(Collectors.toList()), HttpStatus.OK);
+        }
+    }
+
+    @Transactional
+    public List<Book> getByPartAuthorSurname(String partSurname) {
+        return bookRepository.getBookByPartAuthorSurname(partSurname);
+    }
+
+    @Transactional
+    public ResponseEntity <List<BookOutDto>>getByPartAuthorSurnameFromFront(BookSearchDto bookSearchDto){
+        return new ResponseEntity<>(getByPartAuthorSurname(bookSearchDto.getPartSurname())
+                .stream()
+                .map(book -> new BookOutDto(book))
+                .sorted((x1,x2)-> x1.getId().compareTo(x2.getId()))
+                .collect(Collectors.toList()), HttpStatus.OK);
+    }
+
     @Transactional
     public void deleteById(Long id) {
         bookRepository.deleteById(id);
@@ -124,51 +170,14 @@ public class BookService {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    //_____________________________________________________________________________________________//
-    @Transactional
-    public ResponseEntity<List<BookOutDto>> getByTagFromFront(BookSearchDto bookSearchDto) {
-        List<Book> books;
-        books = bookRepository.getByTagId(bookSearchDto.getIdTag());
-        if (books == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } else {
-            return new ResponseEntity<>(books.stream()
-            .map(book -> new BookOutDto(book)).collect(Collectors.toList()), HttpStatus.OK);
-        }
-    }
 
-//        List<Tag> tags = new ArrayList<>();
-//        for (Long id : bookSearchDto.getTagsListId()) {
-//            Tag tag = tagService.getById(id).get();//(id.longValue()).get();
-//            tags.add(tag);
-//        }
-//        List<Book> books;
-//        Set<Long> idTags = new HashSet<>();
-//        for (Tag tag : tags) {
-//        }
-//        idTags.addAll(bookRepository.getByTagsList(tag));
-//
-//        books = bookRepository.getByListId(new ArrayList<>(idTags));
-//        if (books == null) {
-//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//        } else {
-//            return new ResponseEntity<>(books
-//                    .stream()
-//                    .map(book -> new BookOutDto(book))
-//                    .collect(Collectors.toList()), HttpStatus.OK);
-//        }
-//    }
+
+
 
 //    @Transactional
-//    public List<Book> getByAuthor(Author author) {
-//        return bookRepository.getByAuthor(author);
+//    public void deleteByBookTitle(Book book) {
+//        bookRepository.delete(book);
 //    }
-
-
-    @Transactional
-    public void deleteByBookTitle(Book book) {
-        bookRepository.delete(book);
-    }
 
 
     @Transactional
