@@ -12,7 +12,7 @@ public interface BookRepository extends JpaRepository<Book, Long> {
 
     List<Book> findByTitle(String bookTitle);
 
-    //hql запрос
+//hql запрос
 //    @Query("select b from Book b where b.title like %:partTitle%")
 //    List<Book> findBookByPartTitle(@Param("partTitle") String partTitle);
 
