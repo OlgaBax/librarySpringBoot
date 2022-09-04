@@ -1,10 +1,10 @@
-package ru.bainc.security.dtoSecurity;
+package ru.bainc.security.dtosecurity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ru.bainc.security.modelSecurity.Role;
+import ru.bainc.security.modelsecurity.Role;
 
 @Getter
 @Setter

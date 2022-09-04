@@ -1,9 +1,8 @@
-package ru.bainc.security.modelSecurity;
+package ru.bainc.security.modelsecurity;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ru.bainc.security.dtoSecurity.RoleDto;
 
 import javax.persistence.*;
 import java.util.List;

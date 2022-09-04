@@ -1,4 +1,4 @@
-package ru.bainc.security.modelSecurity;
+package ru.bainc.security.modelsecurity;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

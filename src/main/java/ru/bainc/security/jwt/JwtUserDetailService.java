@@ -6,8 +6,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import ru.bainc.security.modelSecurity.User;
-import ru.bainc.security.serviceSecurity.UserService;
+import ru.bainc.security.modelsecurity.User;
+import ru.bainc.security.servicesecurity.UserService;
 
 @Service
 @Slf4j

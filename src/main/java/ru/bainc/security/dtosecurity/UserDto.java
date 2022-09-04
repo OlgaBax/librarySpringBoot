@@ -1,12 +1,12 @@
-package ru.bainc.security.dtoSecurity;
+package ru.bainc.security.dtosecurity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ru.bainc.security.modelSecurity.Status;
-import ru.bainc.security.modelSecurity.User;
+import ru.bainc.security.modelsecurity.Status;
+import ru.bainc.security.modelsecurity.User;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -42,7 +42,6 @@ public class UserDto {
         user.setUserName(userName);
         user.setFirstName(firstName);
         user.setLastName(lastName);
-//        user.setStatus(status);
         return user;
     }
 

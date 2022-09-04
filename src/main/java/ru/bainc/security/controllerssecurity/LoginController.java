@@ -1,4 +1,4 @@
-package ru.bainc.security.controllersSecurity;
+package ru.bainc.security.controllerssecurity;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.bainc.security.dtoSecurity.AuthDto;
+import ru.bainc.security.dtosecurity.AuthDto;
 import ru.bainc.security.jwt.JwtAuthenticationException;
 import ru.bainc.security.jwt.JwtTokenProvider;
-import ru.bainc.security.modelSecurity.User;
-import ru.bainc.security.serviceSecurity.UserService;
+import ru.bainc.security.modelsecurity.User;
+import ru.bainc.security.servicesecurity.UserService;
 import java.util.HashMap;
 import java.util.Map;
 

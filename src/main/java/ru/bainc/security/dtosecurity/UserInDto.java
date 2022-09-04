@@ -1,4 +1,4 @@
-package ru.bainc.security.dtoSecurity;
+package ru.bainc.security.dtosecurity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

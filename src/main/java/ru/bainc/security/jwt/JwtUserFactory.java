@@ -3,9 +3,9 @@ package ru.bainc.security.jwt;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import ru.bainc.security.modelSecurity.Role;
-import ru.bainc.security.modelSecurity.Status;
-import ru.bainc.security.modelSecurity.User;
+import ru.bainc.security.modelsecurity.Role;
+import ru.bainc.security.modelsecurity.Status;
+import ru.bainc.security.modelsecurity.User;
 import java.util.List;
 import java.util.stream.Collectors;
 

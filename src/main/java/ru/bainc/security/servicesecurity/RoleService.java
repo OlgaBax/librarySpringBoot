@@ -1,10 +1,10 @@
-package ru.bainc.security.serviceSecurity;
+package ru.bainc.security.servicesecurity;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.bainc.security.modelSecurity.Role;
-import ru.bainc.security.repositorySecurity.RoleRepository;
+import ru.bainc.security.modelsecurity.Role;
+import ru.bainc.security.repositorysecurity.RoleRepository;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;

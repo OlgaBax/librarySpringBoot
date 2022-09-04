@@ -1,8 +1,8 @@
-package ru.bainc.security.repositorySecurity;
+package ru.bainc.security.repositorysecurity;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import ru.bainc.security.modelSecurity.Role;
+import ru.bainc.security.modelsecurity.Role;
 
 
 @Repository

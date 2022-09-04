@@ -1,4 +1,4 @@
-package ru.bainc.security.controllersSecurity;
+package ru.bainc.security.controllerssecurity;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

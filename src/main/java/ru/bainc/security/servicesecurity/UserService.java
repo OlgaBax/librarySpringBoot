@@ -1,22 +1,17 @@
-package ru.bainc.security.serviceSecurity;
+package ru.bainc.security.servicesecurity;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import ru.bainc.security.dtoSecurity.AuthDto;
-import ru.bainc.security.dtoSecurity.UserDto;
-import ru.bainc.security.dtoSecurity.UserInDto;
-import ru.bainc.security.modelSecurity.Role;
-import ru.bainc.security.modelSecurity.Status;
-import ru.bainc.security.modelSecurity.User;
-import ru.bainc.security.repositorySecurity.RoleRepository;
-import ru.bainc.security.repositorySecurity.UserRepository;
+import ru.bainc.security.dtosecurity.UserDto;
+import ru.bainc.security.dtosecurity.UserInDto;
+import ru.bainc.security.modelsecurity.Status;
+import ru.bainc.security.modelsecurity.User;
+import ru.bainc.security.repositorysecurity.UserRepository;
 import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,23 +20,22 @@ import java.util.stream.Collectors;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
     private final BCryptPasswordEncoder passwordEncoder;
     private final RoleService roleService;
 
     @Autowired
-    public UserService(UserRepository userRepository, RoleRepository roleRepository, BCryptPasswordEncoder passwordEncoder, RoleService roleService) {
+    public UserService(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder, RoleService roleService) {
         this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
         this.roleService = roleService;
     }
 
-    @Transactional
+
     public List<User> getAll() {
         return userRepository.findAll();
     }
 
+   @Transactional
     public List<UserDto> getAllToFront() {
         return getAll()
                 .stream()
@@ -69,6 +63,7 @@ public class UserService {
         return result;
     }
 
+    @Transactional
     public void deleteById(Long id){
         userRepository.deleteById(id);
         log.info("User with id:{} deleted", id);
@@ -76,7 +71,7 @@ public class UserService {
 
 
 
-    @Transactional
+
        public User addUser(UserInDto userInDto){
         User user = new User();
         user.setUserName(userInDto.getUserName());
@@ -92,6 +87,7 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    @Transactional
     public ResponseEntity<UserDto> addUserFromFront (UserInDto userInDto){
         User user = getByUserName(userInDto.getUserName());
         if(user != null){
