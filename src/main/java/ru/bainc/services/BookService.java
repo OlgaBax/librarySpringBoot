@@ -3,6 +3,7 @@ package ru.bainc.services;
 import liquibase.pro.packaged.B;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -12,6 +13,9 @@ import ru.bainc.dto.BookOutDto;
 import ru.bainc.dto.BookSearchDto;
 import ru.bainc.model.*;
 import ru.bainc.repositories.BookRepository;
+
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -24,6 +28,16 @@ public class BookService {
     private final AuthorService authorService;
     private final PubHouseService pubHouseService;
     private final GenreService genreService;
+
+    @Value("${defaultbookinfofilename}")
+    private String bookInfoFileName;
+
+    @Value("${filebooktemp}")
+    private String bookTemp;
+
+    @Value("${filebookstorage}")
+    private String bookStorage;
+
 
     @Autowired
     public BookService(BookRepository bookRepository, TagService tagService,
@@ -67,7 +81,7 @@ public class BookService {
 
     @Transactional
     public List<Book> getBookByPartTitle(String partTitle) {
-        return bookRepository.findBookByPartTitle("%"+partTitle.toLowerCase()+"%");
+        return bookRepository.findBookByPartTitle("%" + partTitle.toLowerCase() + "%");
     }
 
 
@@ -81,13 +95,13 @@ public class BookService {
 
     @Transactional
     public ResponseEntity<List<BookOutDto>> getBookByPartTitleFromFront(BookSearchDto bookSearchDto) {
-            return new ResponseEntity<>(getBookByPartTitle(bookSearchDto.getPartTitle())
-                    .stream()
-                    .map(book -> new BookOutDto(book))
-                    .sorted((x1, x2) -> x1.getId().compareTo(x2.getId()))
-                    .collect(Collectors.toList())
-                    , HttpStatus.OK);
-        }
+        return new ResponseEntity<>(getBookByPartTitle(bookSearchDto.getPartTitle())
+                .stream()
+                .map(book -> new BookOutDto(book))
+                .sorted((x1, x2) -> x1.getId().compareTo(x2.getId()))
+                .collect(Collectors.toList())
+                , HttpStatus.OK);
+    }
 
     @Transactional
     public List<Book> getBookByGenre(Genre genre) {
@@ -145,15 +159,15 @@ public class BookService {
 
     @Transactional
     public List<Book> getByPartAuthorSurname(String partSurname) {
-        return bookRepository.getBookByPartAuthorSurname("%"+partSurname.toLowerCase()+"%");
+        return bookRepository.getBookByPartAuthorSurname("%" + partSurname.toLowerCase() + "%");
     }
 
     @Transactional
-    public ResponseEntity <List<BookOutDto>>getByPartAuthorSurnameFromFront(BookSearchDto bookSearchDto){
+    public ResponseEntity<List<BookOutDto>> getByPartAuthorSurnameFromFront(BookSearchDto bookSearchDto) {
         return new ResponseEntity<>(getByPartAuthorSurname(bookSearchDto.getPartSurname())
                 .stream()
                 .map(book -> new BookOutDto(book))
-                .sorted((x1,x2)-> x1.getId().compareTo(x2.getId()))
+                .sorted((x1, x2) -> x1.getId().compareTo(x2.getId()))
                 .collect(Collectors.toList()), HttpStatus.OK);
     }
 
@@ -203,4 +217,67 @@ public class BookService {
 
         return bookRepository.save(book);
     }
+
+//    public boolean saveInfoAboutBookInFile(BookOutDto bookOutDto, String path) {
+//        try {
+//            FileWriter writer = new FileWriter(path);
+//            writer.write(bookOutDto.bookToStringInfo());
+//            writer.flush();
+//            log.info("File {} saved", path);
+//        } catch (IOException ex) {
+//            return false;
+//        }
+//        return true;
+//    }
+
+    public boolean saveInfoAboutBookInFile(Book book, String path) {
+        try {
+            FileWriter writer = new FileWriter(path);
+            writer.write(book.bookToStringInfo());
+            writer.flush();
+            log.info("File {} saved", path);
+        } catch (IOException ex) {
+            return false;
+        }
+        return true;
+    }
+
+
+    @Transactional
+    public ResponseEntity<BookOutDto> addBookFromFront(BookInDto bookInDto) {
+        List<Book> books = getBookByTitle(bookInDto.getTitle());
+        Book newBook = new Book();
+        Boolean flag = false;
+        if (!books.isEmpty()) {
+            for (Book element : books) {
+                if (!element.getAuthors()
+                        .stream()
+                        .map(x -> x.getId())
+                        .collect(Collectors.toList())
+                        .containsAll((bookInDto.getAuthorsId())
+                                .stream()
+                                .map(Long::valueOf)
+                                .collect(Collectors.toList()))) {
+                    flag = true;
+                } else if (element.getPubHouse().getId() != Long.parseLong(bookInDto.getPubHouseId())) {
+                    flag = true;
+                } else if (!element.getYearEdition().equals(bookInDto.getYearEdition())) {
+                    flag = true;
+                } else {
+                    log.info("Такая книга уже существует");
+                    return new ResponseEntity<>(new BookOutDto(element), HttpStatus.OK);
+                }
+            }
+            if (flag) {
+                newBook = addBook(bookInDto);
+//                saveInfoAboutBookInFile(newBook, bookTemp);
+
+            }
+        } else newBook = addBook(bookInDto);
+//        saveInfoAboutBookInFile(newBook, bookTemp);
+
+        return new ResponseEntity<>(new BookOutDto(newBook), HttpStatus.OK);
+    }
 }
+
+
