@@ -69,9 +69,6 @@ public class UserService {
         log.info("User with id:{} deleted", id);
     }
 
-
-
-
        public User addUser(UserInDto userInDto){
         User user = new User();
         user.setUserName(userInDto.getUserName());
