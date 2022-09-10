@@ -1,6 +1,5 @@
 package ru.bainc.services;
 
-import liquibase.pro.packaged.B;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,7 +12,6 @@ import ru.bainc.dto.BookOutDto;
 import ru.bainc.dto.BookSearchDto;
 import ru.bainc.model.*;
 import ru.bainc.repositories.BookRepository;
-
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
@@ -139,7 +137,6 @@ public class BookService {
         }
     }
 
-
     @Transactional
     public ResponseEntity<List<BookOutDto>> getByTagFromFront(BookSearchDto bookSearchDto) {
         Set<Book> books = new HashSet<>();
@@ -186,12 +183,6 @@ public class BookService {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-//    @Transactional
-//    public void deleteByBookTitle(Book book) {
-//        bookRepository.delete(book);
-//    }
-
-
     @Transactional
     public Book addBook(BookInDto bookInDto) {
         Book book = new Book();
@@ -218,18 +209,6 @@ public class BookService {
         return bookRepository.save(book);
     }
 
-//    public boolean saveInfoAboutBookInFile(BookOutDto bookOutDto, String path) {
-//        try {
-//            FileWriter writer = new FileWriter(path);
-//            writer.write(bookOutDto.bookToStringInfo());
-//            writer.flush();
-//            log.info("File {} saved", path);
-//        } catch (IOException ex) {
-//            return false;
-//        }
-//        return true;
-//    }
-
     public boolean saveInfoAboutBookInFile(Book book, String path) {
         try {
             FileWriter writer = new FileWriter(path);
@@ -241,7 +220,6 @@ public class BookService {
         }
         return true;
     }
-
 
     @Transactional
     public ResponseEntity<BookOutDto> addBookFromFront(BookInDto bookInDto) {
@@ -270,11 +248,15 @@ public class BookService {
             }
             if (flag) {
                 newBook = addBook(bookInDto);
-//                saveInfoAboutBookInFile(newBook, bookTemp);
-
+                saveInfoAboutBookInFile(newBook, bookTemp + "\\" + bookInfoFileName);
             }
         } else newBook = addBook(bookInDto);
-//        saveInfoAboutBookInFile(newBook, bookTemp);
+        saveInfoAboutBookInFile(newBook, bookTemp + "\\" + bookInfoFileName);
+        // сохранить поле файл из ждесон в файл с именем uid + . + формат книги
+        // присвоить полю пафТоЗип в сущности бук uid + . +7z
+        // сжать 2файла из Temp директории в Storage и они должны сами удалиться в Temp (сжала и скопировала в директорию)
+        // хранилища и очистила директорию Темп.
+        // снова сохранить сущность бук. save Book снова.
 
         return new ResponseEntity<>(new BookOutDto(newBook), HttpStatus.OK);
     }

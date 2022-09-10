@@ -20,8 +20,6 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     @Query(value = "select * from books b where lower(b.title) like :partTitle", nativeQuery = true)
     List<Book> findBookByPartTitle(@Param("partTitle") String partTitle);
 
-
-
     @Query("select b from Book b where b.genre=:genre")
     List<Book> getByGenre(@Param("genre") Genre genre);
 
@@ -40,15 +38,5 @@ public interface BookRepository extends JpaRepository<Book, Long> {
             "(select book_id from books_authors where author_id in " +
             "(select a.id from authors a where lower (a.surname) like :partSurname))", nativeQuery = true)
     List<Book>getBookByPartAuthorSurname(@Param("partSurname") String partSurname);
-
-//    @Query(value = "select distinct b from Book b join fetch b.authors join fetch b.genre " +
-//            "join fetch b.pubHouse " +
-//            "join fetch b.pubHouseTranslate join fetch b.tags where :author in elements(b.authors)" )
-//    List<Book> getByAuthor (@Param("author")Author author);
-
-//    @Query(value = "select distinct b from Book b join fetch b.authors join fetch b.genre " +
-//            "join fetch b.pubHouse " +
-//            "join fetch b.pubHouseTranslate join fetch b.tags where :tag in elements(b.tags)")
-//    List<Book> getByTag (@Param("tag") Tag tag);
 
 }
