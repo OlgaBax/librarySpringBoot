@@ -9,7 +9,6 @@ import ru.bainc.dto.BookInDto;
 import ru.bainc.dto.BookOutDto;
 import ru.bainc.dto.BookSearchDto;
 import ru.bainc.services.BookService;
-
 import java.util.List;
 
 @RestController
@@ -79,19 +78,10 @@ public class BookController {
     }
 
 
-//________________________________________________________________________________________
-
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PostMapping
     public ResponseEntity<BookOutDto> addBook(@RequestBody BookInDto bookInDto) {
         return bookService.addBookFromFront(bookInDto);
-
     }
-//        if (bookService.addBookFromFront(bookInDto) != null) {
-//            return new ResponseEntity<>("Book add", HttpStatus.OK);
-//        } else
-//            return new ResponseEntity<>("Что-то пошло не так",HttpStatus.BAD_REQUEST);
-//    }
-
 }
 

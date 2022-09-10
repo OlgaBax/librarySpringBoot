@@ -59,31 +59,4 @@ public class BookOutDto {
                         + (author.getMiddleName() == null ? " " : author.getMiddleName()))
                 .collect(Collectors.toSet());
     }
-
-//    public static String setStringToString(Set<String> stringSet) {
-//        StringBuilder sb = new StringBuilder();
-//        stringSet.forEach(s -> sb.append(s).append("; "));
-//        return sb.toString();
-//    }
-//
-//    public String bookToStringInfo() {
-//        StringBuilder builder = new StringBuilder();
-//        builder.append("UUID: ").append(this.uuid).append("\n");
-//        builder.append("Название: ").append(this.title).append("\n");
-//        builder.append("Оригинальное название: ").append(this.originalTitle).append("\n");
-//        builder.append("Год издания оригинала: ").append(this.yearEdition).append("\n");
-//        builder.append("Год издания перевода: ").append(this.yearOfEditionTranslate).append("\n");
-//        builder.append("ISBN оригинала: ").append(this.isbnOriginal).append("\n");
-//        builder.append("ISBN перевода: ").append(this.isbnTranslate).append("\n");
-//        builder.append("Формат книги: ").append(this.fileFormatBook).append("\n");
-//        builder.append("Имя файла архива: ").append(this.pathToZipBook).append("\n");
-//        builder.append("Жанр: ").append(this.genre).append("\n");
-//        builder.append("Издательство оригинала: ").append(this.pubHouse).append("\n");
-//        builder.append("Издательство перевода: ").append(this.pubHouseTranslate).append("\n");
-//        builder.append("Авторы: ").append(setStringToString(this.authors)).append("\n");
-//        builder.append("Теги: ").append(setStringToString(this.tags)).append("\n");
-//        builder.append("\n\n ");
-//        return builder.toString();
-//    }
-
 }

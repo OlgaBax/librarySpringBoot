@@ -6,6 +6,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -88,13 +89,18 @@ public class Book {
         builder.append("ISBN перевода: ").append(this.isbnTranslate).append("\n");
         builder.append("Формат книги: ").append(this.fileFormatBook).append("\n");
         builder.append("Имя файла архива: ").append(this.pathToZipBook).append("\n");
-        builder.append("Жанр: ").append(this.genre).append("\n");
-        builder.append("Издательство оригинала: ").append(this.pubHouse).append("\n");
-        builder.append("Издательство перевода: ").append(this.pubHouseTranslate).append("\n");
-        builder.append("Авторы: ").append(this.authors).append("\n");
-        builder.append("Теги: ").append(this.tags).append("\n");
+        builder.append("Жанр: ").append(this.genre.getGenreTitle()).append("\n");
+        builder.append("Издательство оригинала: ").append(this.pubHouse.getPubHouseTitle()).append("\n");
+        builder.append("Издательство перевода: ").append(this.pubHouseTranslate.getPubHouseTitle()).append("\n");
+        builder.append("Авторы: ").append(setStringToString(this.authors
+                .stream()
+                .map(a->a.getSurName() + a.getName()+ a.getMiddleName()).collect(Collectors.toSet()))).append("\n");
+        builder.append("Теги: ").append(setStringToString(this.tags
+                .stream()
+                .map(t->t.getTagTitle())
+                .collect(Collectors.toSet())))
+                .append("\n");
         builder.append("\n\n ");
         return builder.toString();
     }
-
 }
