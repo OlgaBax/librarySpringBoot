@@ -80,8 +80,14 @@ public class BookController {
 
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PostMapping
-    public ResponseEntity<BookOutDto> addBook(@RequestBody BookInDto bookInDto) {
+    public ResponseEntity<BookOutDto> addBook(@RequestBody BookInDto bookInDto) throws Exception {
         return bookService.addBookFromFront(bookInDto);
+    }
+
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_USER')")
+    @GetMapping("/download/{id}")
+    public ResponseEntity<String> downloadBook (@PathVariable Long id) throws Exception {
+        return bookService.downloadBookFromFront(id);
     }
 }
 

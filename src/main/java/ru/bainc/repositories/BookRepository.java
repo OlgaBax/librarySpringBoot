@@ -6,11 +6,14 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import ru.bainc.model.*;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface BookRepository extends JpaRepository<Book, Long> {
 
     List<Book> findByTitle(String bookTitle);
+
+    Optional<Book> findById (Long id);
 
 //hql запрос
 //    @Query("select b from Book b where b.title like %:partTitle%")
@@ -38,5 +41,4 @@ public interface BookRepository extends JpaRepository<Book, Long> {
             "(select book_id from books_authors where author_id in " +
             "(select a.id from authors a where lower (a.surname) like :partSurname))", nativeQuery = true)
     List<Book>getBookByPartAuthorSurname(@Param("partSurname") String partSurname);
-
 }

@@ -27,5 +27,6 @@ public class BookInDto {
     private String pubHouseTranslateId;
     private List<String> tagsId;
     private List<String> authorsId;
+    private String file;
 
 }
