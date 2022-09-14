@@ -12,6 +12,10 @@ import ru.bainc.dto.BookOutDto;
 import ru.bainc.dto.BookSearchDto;
 import ru.bainc.model.*;
 import ru.bainc.repositories.BookRepository;
+import ru.bainc.util.Base64Utils;
+import ru.bainc.util.SevenZCompress;
+import ru.bainc.util.SevenZDecompress;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
@@ -222,7 +226,7 @@ public class BookService {
     }
 
     @Transactional
-    public ResponseEntity<BookOutDto> addBookFromFront(BookInDto bookInDto) {
+    public ResponseEntity<BookOutDto> addBookFromFront(BookInDto bookInDto) throws Exception {
         List<Book> books = getBookByTitle(bookInDto.getTitle());
         Book newBook = new Book();
         Boolean flag = false;
@@ -248,17 +252,63 @@ public class BookService {
             }
             if (flag) {
                 newBook = addBook(bookInDto);
-                saveInfoAboutBookInFile(newBook, bookTemp + "\\" + bookInfoFileName);
+                saveInfoAboutBookInFile(newBook, bookTemp + File.separator + bookInfoFileName);
             }
         } else newBook = addBook(bookInDto);
-        saveInfoAboutBookInFile(newBook, bookTemp + "\\" + bookInfoFileName);
-        // сохранить поле файл из ждесон в файл с именем uid + . + формат книги
-        // присвоить полю пафТоЗип в сущности бук uid + . +7z
-        // сжать 2файла из Temp директории в Storage и они должны сами удалиться в Temp (сжала и скопировала в директорию)
-        // хранилища и очистила директорию Темп.
-        // снова сохранить сущность бук. save Book снова.
+        saveInfoAboutBookInFile(newBook, bookTemp + File.separator + bookInfoFileName);
 
+        if (bookInDto.getFile() != null) {
+            if (Base64Utils.base64ToFile(bookInDto.getFile(),
+                    bookTemp + File.separator + newBook.getUuid()
+                            + "." + newBook.getFileFormatBook().toString().toLowerCase())) {
+                log.info("File book save: {}", bookTemp + File.separator + newBook.getUuid()
+                        + "." + newBook.getFileFormatBook().toString().toLowerCase());
+            }
+        }
+
+        File[] files =
+                {new File(bookTemp + File.separator + newBook.getUuid() + "."
+                        + newBook.getFileFormatBook().toString().toLowerCase()),
+                        new File(bookTemp + File.separator + bookInfoFileName)};
+
+
+        SevenZCompress.compress(bookTemp + File.separator + newBook.getUuid() + "." + "7z", files);
+        SevenZCompress.copyFile7zOutBookTemp(new File(bookTemp + File.separator + newBook.getUuid() + "." + "7z"),
+                new File(bookStorage + File.separator + newBook.getUuid() + "." + "7z"));
+
+        SevenZCompress.cleanBookTemp(new File(bookTemp));
+        newBook.setPathToZipBook(newBook.getUuid() + "." + "7z");
         return new ResponseEntity<>(new BookOutDto(newBook), HttpStatus.OK);
+    }
+
+    @Transactional
+    public Book downloadBook(Long id) {
+        Book book = bookRepository.findById(id).get();
+        if (book != null) {
+            try {
+                SevenZDecompress.decompress(bookStorage + File.separator + book.getPathToZipBook(),
+                        bookTemp);
+                log.info("Книга распакована");
+            } catch (IOException e) {
+                log.error("File not found exception");
+            }
+        }
+        return book;
+    }
+
+    @Transactional
+    public ResponseEntity<String> downloadBookFromFront(Long id) throws Exception {
+        Book book = downloadBook(id);
+        if (book == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } else {
+            ResponseEntity<String> response = new ResponseEntity<>
+                    (Base64Utils.fileToBase64(bookTemp + File.separator + book.getUuid() + "."
+                    + book.getFileFormatBook().toString().toLowerCase()), HttpStatus.OK);
+
+            SevenZCompress.cleanBookTemp(new File(bookTemp));
+            return response;
+        }
     }
 }
 
