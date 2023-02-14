@@ -22,9 +22,4 @@ public class AuthorDto {
         this.middleName = author.getMiddleName();
         this.surName = author.getSurName() ;
     }
-
-
-    public AuthorDto(List<Author> authors) {
-
-    }
 }

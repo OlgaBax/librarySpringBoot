@@ -52,8 +52,7 @@ public class TagService {
 
     @Transactional
     public Tag addTag(Tag tag) {
-        Tag tag1 = tagRepository.save(tag);
-        return tag1;
+        return tagRepository.save(tag);
     }
 
     @Transactional
@@ -69,7 +68,7 @@ public class TagService {
     public ResponseEntity<TagDto> getByIdToFront(Long id) {
         Tag tag = getById(id).orElse(null);
         if (tag == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
             return new ResponseEntity<>(new TagDto(tag), HttpStatus.OK);
         }

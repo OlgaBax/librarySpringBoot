@@ -7,25 +7,11 @@ import org.apache.commons.io.FileUtils;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import static org.apache.commons.compress.archivers.sevenz.SevenZMethod.LZMA2;
 
 public class SevenZCompress {
-//    public static void compress(String outputZipFile, String sourceFolder) {
-//        File file = new File(sourceFolder); //sourceFolder- источник заполнитель, outputZipFile-выходной 7зип файл
-//        if (file.exists()) {
-//            try (SevenZOutputFile out = new SevenZOutputFile(new File(outputZipFile))) {
-//                addToArchiveCompression(out, file, ".");
-//                System.out.println("Files sucessfully compressed");
-//            } catch (IOException e) {
-//                throw new RuntimeException(e);
-//            }
-//        } else {
-//            System.out.println("Folder does not exist");
-//        }
-//    }
 
     public static void compress(String name, File...files) {
-        try (SevenZOutputFile out = new SevenZOutputFile(new File(name))) {//name-выходний зипФайл
+        try (SevenZOutputFile out = new SevenZOutputFile(new File(name))) {//name-выходной зипФайл
             out.setContentCompression(SevenZMethod.LZMA2); // выбрала метод компрессии
             for(File file: files){
                 addToArchiveCompression(out, file, ".");}

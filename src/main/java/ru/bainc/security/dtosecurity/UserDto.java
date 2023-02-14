@@ -52,6 +52,8 @@ public class UserDto {
         userDto.setFirstName(user.getFirstName());
         userDto.setLastName(user.getLastName());
         userDto.setStatus(user.getStatus());
+        userDto.setRoles(user.getRoles().stream().map(role -> new RoleDto(role)).collect(Collectors.toList()));
+        userDto.setPassword(user.getPassword());
         return userDto;
     }
 }

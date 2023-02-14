@@ -30,10 +30,6 @@ public class Author {
     @ManyToMany(mappedBy = "authors")
     private Set<Book> books;
 
-    public Author(String surName) {
-        this.surName = surName;
-    }
-
     public Author(String surName, String name, String middleName) {
         this.surName = surName;
         this.name = name;

@@ -1,16 +1,9 @@
 package ru.bainc.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ru.bainc.model.Book;
-
-import java.io.FileWriter;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -19,7 +12,6 @@ import java.util.stream.Collectors;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 public class BookOutDto {
     private Long id;
     private UUID uuid;
@@ -51,7 +43,9 @@ public class BookOutDto {
         this.genre = book.getGenre().getGenreTitle();
         this.pubHouse = book.getPubHouse().getPubHouseTitle();
         this.pubHouseTranslate = book.getPubHouseTranslate().getPubHouseTitle();
-        this.tags = book.getTags().stream().map(tag -> tag.getTagTitle()).collect(Collectors.toSet());
+        this.tags = book.getTags()
+                .stream()
+                .map(tag -> tag.getTagTitle()).collect(Collectors.toSet());
         this.authors = book.getAuthors()
                 .stream()
                 .map(author -> author.getSurName() + " "
@@ -59,4 +53,6 @@ public class BookOutDto {
                         + (author.getMiddleName() == null ? " " : author.getMiddleName()))
                 .collect(Collectors.toSet());
     }
+
+
 }

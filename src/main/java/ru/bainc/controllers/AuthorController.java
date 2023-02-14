@@ -6,7 +6,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.bainc.dto.AuthorDto;
 import ru.bainc.services.AuthorService;
-
 import java.util.List;
 
 @RestController

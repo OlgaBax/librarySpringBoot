@@ -57,8 +57,10 @@ public class BookService {
     }
 
     @Transactional
-    public List<BookOutDto> getAllBooksToFront() {
-        return getAllBooks().stream().map(book -> new BookOutDto(book)).collect(Collectors.toList());
+    public ResponseEntity<List<BookOutDto>> getAllBooksToFront() {
+        return new ResponseEntity<>(getAllBooks().stream().
+                map(book -> new BookOutDto(book)).
+                collect(Collectors.toList()), HttpStatus.OK);
     }
 
     @Transactional
@@ -70,7 +72,7 @@ public class BookService {
     public ResponseEntity<BookOutDto> getByIdFromFront(Long id) {
         Book book = getById(id).orElse(null);
         if (book == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
             return new ResponseEntity<>(new BookOutDto(book), HttpStatus.OK);
         }
@@ -114,7 +116,7 @@ public class BookService {
     public ResponseEntity<List<BookOutDto>> getByGenreFromFront(BookOutDto bookOutDto) {
         Genre genre = genreService.getByGenreTitle(bookOutDto.getGenre());
         if (genre == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
             return new ResponseEntity<>(getBookByGenre(genre)
                     .stream()
@@ -132,7 +134,7 @@ public class BookService {
     public ResponseEntity<List<BookOutDto>> getByPubHouseFromFront(BookOutDto bookOutDto) {
         PubHouse pubHouse = pubHouseService.getByPubHouseTitle(bookOutDto.getPubHouse());
         if (pubHouse == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
             return new ResponseEntity<>(getByPubHouse(pubHouse)
                     .stream()
@@ -148,15 +150,15 @@ public class BookService {
             List<Book> tempList = bookRepository.getByTagId(id);
             books.addAll(tempList);
         }
-        if (books == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } else {
+//        if (books == null) {
+//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//        } else {
             return new ResponseEntity<>(books
                     .stream()
                     .map(book -> new BookOutDto(book)).sorted((x1, x2) -> x1.getId().compareTo(x2.getId()))
                     .collect(Collectors.toList()), HttpStatus.OK);
         }
-    }
+//    }
 
     @Transactional
     public List<Book> getByPartAuthorSurname(String partSurname) {
@@ -229,7 +231,7 @@ public class BookService {
     public ResponseEntity<BookOutDto> addBookFromFront(BookInDto bookInDto) throws Exception {
         List<Book> books = getBookByTitle(bookInDto.getTitle());
         Book newBook = new Book();
-        Boolean flag = false;
+        boolean flag = false;
         if (!books.isEmpty()) {
             for (Book element : books) {
                 if (!element.getAuthors()
@@ -238,7 +240,7 @@ public class BookService {
                         .collect(Collectors.toList())
                         .containsAll((bookInDto.getAuthorsId())
                                 .stream()
-                                .map(Long::valueOf)
+                                .map(s -> Long.valueOf(s))
                                 .collect(Collectors.toList()))) {
                     flag = true;
                 } else if (element.getPubHouse().getId() != Long.parseLong(bookInDto.getPubHouseId())) {

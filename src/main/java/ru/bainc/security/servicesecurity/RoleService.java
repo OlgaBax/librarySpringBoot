@@ -14,8 +14,6 @@ import java.util.Optional;
 public class RoleService {
     private final RoleRepository roleRepository;
 
-  //  private final
-
     @Autowired
     public RoleService(RoleRepository roleRepository) {
         this.roleRepository = roleRepository;

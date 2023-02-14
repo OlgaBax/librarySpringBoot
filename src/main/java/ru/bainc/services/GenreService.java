@@ -5,10 +5,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.UnexpectedRollbackException;
 import org.springframework.transaction.annotation.Transactional;
 import ru.bainc.dto.GenreDto;
 import ru.bainc.model.Genre;
 import ru.bainc.repositories.GenreRepository;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -37,30 +39,25 @@ public class GenreService {
 
     @Transactional
     public Genre getByGenreTitle(String genreTitle) {
-        Genre genre = genreRepository.findByGenreTitle(genreTitle);
-        log.info("Genre with title {} found", genreTitle);
-        return genre;
-    }
+        if (genreTitle != null) {
+            Genre genre = genreRepository.findByGenreTitle(genreTitle);
+            log.info("Genre with title {} found", genreTitle);
+            return genre;
 
-    @Transactional
-    public Genre addGenre(Genre genre) {
-        Genre genre1 = genreRepository.save(genre);
-        return genre1;
-    }
-
-    @Transactional
-    public void deleteGenreById(Long id) throws Exception {
-        try {
-            genreRepository.deleteById(id);
-        } catch (Exception e) {
-            throw new Exception("Что-то пошло не так");
+        } else {
+            return null;
         }
     }
 
     @Transactional
-    public void deleteGenreByTitle(Genre genre) {
-        genreRepository.delete(genre);
+    public Genre addGenre(Genre genre) {
+        if (genre != null) {
+            return genreRepository.save(genre);
+        } else {
+            return null;
+        }
     }
+
 
     @Transactional
     public ResponseEntity<List<GenreDto>> getAllGenresToFront() {
@@ -81,13 +78,11 @@ public class GenreService {
     public ResponseEntity<GenreDto> getByTitleToFront(GenreDto genreDto) {
         Genre genre = getByGenreTitle(genreDto.getTitle());
         if (genre != null) {
-            return new ResponseEntity<>(new GenreDto(getByGenreTitle(genreDto.getTitle())), HttpStatus.OK);
+            return new ResponseEntity<>(new GenreDto(genre), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-
-
     @Transactional
     public ResponseEntity<GenreDto> addGenreFromFront(GenreDto genreDto) {
         Genre genre = getByGenreTitle(genreDto.getTitle());
@@ -100,21 +95,37 @@ public class GenreService {
     }
 
     @Transactional
-    public ResponseEntity<?> deleteByIdFromFront(Long id) {
-        try {
-            deleteGenreById(id);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-        return new ResponseEntity<>(HttpStatus.OK);
+    public boolean deleteGenreById(Long id) {
+        Genre genre = genreRepository.findById(id).orElse(null);
+        if (genre != null) {
+            genreRepository.delete(genre);
+            return true;
+        } else
+            return false;
     }
+    @Transactional
+    public ResponseEntity<?> deleteByIdFromFront(Long id) {
+        if (deleteGenreById(id)) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @Transactional
+    public boolean deleteGenreByTitle(Genre genre) {
+        genreRepository.delete(genre);
+        return true;
+    }
+
 
     @Transactional
     public ResponseEntity<?> deleteByTitleToFront(GenreDto genreDto) {
         Genre genre = getByGenreTitle(genreDto.getTitle());
         if (genre != null) {
             deleteGenreByTitle(genre);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

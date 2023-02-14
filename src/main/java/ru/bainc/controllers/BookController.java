@@ -26,7 +26,7 @@ public class BookController {
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_USER')")
     @GetMapping
     public ResponseEntity<List<BookOutDto>> getAllBooks() {
-        return new ResponseEntity<>(bookService.getAllBooksToFront(), HttpStatus.OK);
+        return bookService.getAllBooksToFront();
     }
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_USER')")
     @GetMapping("/title")

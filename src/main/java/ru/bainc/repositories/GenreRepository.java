@@ -8,8 +8,4 @@ import ru.bainc.model.Genre;
 public interface GenreRepository extends JpaRepository<Genre, Long> {
 
     Genre findByGenreTitle (String genreTitle);
-
-
-
-
 }

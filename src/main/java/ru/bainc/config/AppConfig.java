@@ -6,6 +6,9 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.io.FileWriter;
+import java.io.IOException;
+
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -15,4 +18,5 @@ public class AppConfig {
     public BCryptPasswordEncoder passwordEncoder() {
         return  new BCryptPasswordEncoder();
     }
+
 }
