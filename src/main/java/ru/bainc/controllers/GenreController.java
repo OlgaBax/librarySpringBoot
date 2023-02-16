@@ -55,4 +55,5 @@ public class GenreController {
     public ResponseEntity<?> deleteByTitle(@RequestBody GenreDto genreDto) {
         return genreService.deleteByTitleToFront(genreDto);
     }
+
 }

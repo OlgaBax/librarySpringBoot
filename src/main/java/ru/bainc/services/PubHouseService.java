@@ -115,9 +115,6 @@ public class PubHouseService {
 
     @Transactional
     public ResponseEntity<?> deleteByTitleToFront(PubHouseDto pubHouseDto) {
-//        PubHouse pubHouse = getByPubHouseTitle(pubHouseDto.getTitle());
-//        if (pubHouse != null) {
-//            deleteByPubHouseTitle(pubHouse.getPubHouseTitle());
         if(deleteByPubHouseTitle(pubHouseDto.getTitle())){
             return new ResponseEntity<>(HttpStatus.OK);
         } else {

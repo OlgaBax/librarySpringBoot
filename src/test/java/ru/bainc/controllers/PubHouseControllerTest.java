@@ -10,6 +10,7 @@ import ru.bainc.model.PubHouse;
 import ru.bainc.services.PubHouseService;
 import java.util.Collections;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 
 class PubHouseControllerTest {
     private PubHouseService pubHouseService;
@@ -68,6 +69,25 @@ class PubHouseControllerTest {
         Mockito.when(pubHouseService.addPubHouseFromFront(pubHouseDto))
                 .thenReturn(new ResponseEntity<>(pubHouseDto,HttpStatus.OK));
         assertEquals(HttpStatus.OK, pubHouseController.addPubHouse(pubHouseDto).getStatusCode());
+    }
+
+    @Test
+    void deleteById(){
+        Mockito.when(pubHouseService.deleteByIdFromFront(DECIMAL)).thenReturn(new ResponseEntity<>(HttpStatus.OK));
+        assertEquals(HttpStatus.OK, pubHouseController.deleteById(DECIMAL).getStatusCode());
+        Mockito.when(pubHouseService.deleteByIdFromFront(any())).thenReturn(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        assertEquals(HttpStatus.NOT_FOUND, pubHouseController.deleteById(any()).getStatusCode());
+    }
+
+    @Test
+    void deleteByTitle (){
+        PubHouse pubHouse = new PubHouse(TEXT);
+        pubHouse.setId(DECIMAL);
+        PubHouseDto pubHouseDto = new PubHouseDto(pubHouse);
+        Mockito.when(pubHouseService.deleteByTitleToFront(pubHouseDto)).thenReturn(new ResponseEntity<>(HttpStatus.OK));
+        assertEquals(HttpStatus.OK, pubHouseController.deleteByTitle(pubHouseDto).getStatusCode());
+        Mockito.when(pubHouseService.deleteByTitleToFront(any())).thenReturn(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        assertEquals(HttpStatus.NOT_FOUND, pubHouseController.deleteByTitle(any()).getStatusCode());
     }
 
 }
