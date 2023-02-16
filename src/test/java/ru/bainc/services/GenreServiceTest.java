@@ -95,7 +95,10 @@ class GenreServiceTest {
         Genre genre = new Genre(TEXT);
         genre.setId(DECIMAL);
         Mockito.doNothing().when(genreRepository).delete(Mockito.any(Genre.class));
-        assertTrue(genreService.deleteGenreByTitle(genre));
+        assertFalse(genreService.deleteGenreByTitle(genre.getGenreTitle()));
+        Mockito.doReturn(genre).when(genreRepository).findByGenreTitle(genre.getGenreTitle());
+//        Mockito.when(genreRepository.findByGenreTitle(TEXT)).thenReturn(genre);
+        assertTrue(genreService.deleteGenreByTitle(genre.getGenreTitle()));
     }
 
 

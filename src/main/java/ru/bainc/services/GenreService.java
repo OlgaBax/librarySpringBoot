@@ -83,6 +83,7 @@ public class GenreService {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
     @Transactional
     public ResponseEntity<GenreDto> addGenreFromFront(GenreDto genreDto) {
         Genre genre = getByGenreTitle(genreDto.getTitle());
@@ -103,6 +104,7 @@ public class GenreService {
         } else
             return false;
     }
+
     @Transactional
     public ResponseEntity<?> deleteByIdFromFront(Long id) {
         if (deleteGenreById(id)) {
@@ -112,17 +114,18 @@ public class GenreService {
     }
 
     @Transactional
-    public boolean deleteGenreByTitle(Genre genre) {
-        genreRepository.delete(genre);
-        return true;
+    public boolean deleteGenreByTitle(String title) {
+        Genre genre = genreRepository.findByGenreTitle(title);
+        if (genre != null) {
+            genreRepository.delete(genre);
+            return true;
+        } else return false;
     }
 
 
     @Transactional
     public ResponseEntity<?> deleteByTitleToFront(GenreDto genreDto) {
-        Genre genre = getByGenreTitle(genreDto.getTitle());
-        if (genre != null) {
-            deleteGenreByTitle(genre);
+        if (deleteGenreByTitle(genreDto.getTitle())){
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
