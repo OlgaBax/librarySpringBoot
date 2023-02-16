@@ -123,4 +123,15 @@ class PubHouseServiceTest {
         Mockito.when(pubHouseRepository.findByPubHouseTitle(any())).thenReturn(null);
         assertFalse(pubHouseService.deleteByPubHouseTitle(null));
     }
+
+    @Test
+    void deleteByTitleToFront(){
+        PubHouse pubHouse =new PubHouse(TEXT);
+        pubHouse.setId(DECIMAL);
+        PubHouseDto pubHouseDto = new PubHouseDto(pubHouse);
+        Mockito.when(pubHouseRepository.findByPubHouseTitle(pubHouse.getPubHouseTitle())).thenReturn(pubHouse);
+        assertEquals(HttpStatus.OK, pubHouseService.deleteByTitleToFront(pubHouseDto).getStatusCode());
+        Mockito.when(pubHouseRepository.findByPubHouseTitle(any())).thenReturn(null);
+        assertEquals(HttpStatus.NOT_FOUND, pubHouseService.deleteByTitleToFront(pubHouseDto).getStatusCode());
+    }
 }
