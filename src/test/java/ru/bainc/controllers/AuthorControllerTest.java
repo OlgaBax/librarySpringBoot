@@ -63,6 +63,22 @@ class AuthorControllerTest {
         Mockito.when(authorService.addAuthorFromFront(authorDto))
                 .thenReturn(new ResponseEntity<>(authorDto, HttpStatus.OK));
         assertEquals(HttpStatus.OK, authorController.addAuthor(authorDto).getStatusCode());
+    }
 
+    @Test
+    void deleteById(){
+        Mockito.when(authorService.deleteByIdFromFront(DECIMAL))
+                .thenReturn(new ResponseEntity<>(HttpStatus.OK));
+        assertEquals(HttpStatus.OK, authorController.deleteById(DECIMAL).getStatusCode());
+    }
+
+    @Test
+    void deleteByFio(){
+        Author author = new Author(TEXT, TEXT, TEXT);
+        author.setId(DECIMAL);
+        AuthorDto authorDto = new AuthorDto(author);
+        Mockito.when(authorService.deleteByFioToFront(authorDto))
+                .thenReturn(new ResponseEntity<>(HttpStatus.OK));
+        assertEquals(HttpStatus.OK, authorController.deleteByFio(authorDto).getStatusCode());
     }
 }

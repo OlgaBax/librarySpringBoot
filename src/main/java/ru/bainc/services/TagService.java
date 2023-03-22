@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.bainc.dto.TagDto;
 import ru.bainc.model.Tag;
 import ru.bainc.repositories.TagRepository;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -40,15 +41,6 @@ public class TagService {
         return tag;
     }
 
-    @Transactional
-    public void deleteTagByTitle(Tag tag) {
-        tagRepository.delete(tag);
-    }
-
-    @Transactional
-    public void deleteTagById(Long id) {
-        tagRepository.deleteById(id);
-    }
 
     @Transactional
     public Tag addTag(Tag tag) {
@@ -83,6 +75,7 @@ public class TagService {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
     @Transactional
     public ResponseEntity<TagDto> addTagFromFront(TagDto tagDto) {
         Tag tag = getByTagTitle(tagDto.getTitle());
@@ -95,25 +88,40 @@ public class TagService {
     }
 
     @Transactional
-    public ResponseEntity<?> deleteByTitleToFront(TagDto tagDto) {
-        Tag tag = getByTagTitle(tagDto.getTitle());
+    public boolean deleteTagByTitle(String title) {
+        Tag tag = tagRepository.findByTagTitle(title);
         if (tag != null) {
-            deleteTagByTitle(tag);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } else {
-            log.info("Тага с таким названием не существует");
-        }
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            tagRepository.delete(tag);
+            return true;
+        } else return false;
     }
 
     @Transactional
-    public ResponseEntity<?> deleteByIdFromFront (Long id){
-        try{
-            deleteTagById(id);
-        } catch (Exception e){
+    public ResponseEntity<?> deleteByTitleToFront(TagDto tagDto) {
+        if (deleteTagByTitle(tagDto.getTitle())) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else{
+            log.info("Тага с таким названием не существует");
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(HttpStatus.OK);
+
     }
 
+    @Transactional
+    public boolean deleteTagById(Long id) {
+        Tag tag = tagRepository.findById(id).orElse(null);
+        if (tag != null) {
+            tagRepository.delete(tag);
+            return true;
+        } else return false;
+    }
+
+
+    @Transactional
+    public ResponseEntity<?> deleteByIdFromFront(Long id) {
+        if (deleteTagById(id)) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
 }

@@ -2,6 +2,7 @@ package ru.bainc.controllers;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -58,9 +59,23 @@ class TagControllerTest {
     void addTag() {
         Tag tag = new Tag(TEXT);
         tag.setId(DECIMAL);
-
         TagDto tagDto = new TagDto(tag);
         Mockito.when(tagService.addTagFromFront(tagDto)).thenReturn(new ResponseEntity<>(tagDto, HttpStatus.OK));
         assertEquals(HttpStatus.OK, tagController.addTag(tagDto).getStatusCode());
+    }
+
+    @Test
+    void deleteById(){
+        Mockito.when(tagService.deleteByIdFromFront(DECIMAL)).thenReturn(new ResponseEntity<>(HttpStatus.OK));
+        assertEquals(HttpStatus.OK, tagController.deleteById(DECIMAL).getStatusCode());
+    }
+
+    @Test
+    void deleteByTitle(){
+        Tag tag = new Tag(TEXT);
+        tag.setId(DECIMAL);
+        TagDto tagDto = new TagDto(tag);
+        Mockito.when(tagService.deleteByTitleToFront(tagDto)).thenReturn(new ResponseEntity<>(HttpStatus.OK));
+        assertEquals(HttpStatus.OK, tagController.deleteByTitle(tagDto).getStatusCode());
     }
 }

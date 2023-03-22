@@ -15,6 +15,7 @@ import ru.bainc.services.BookService;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static ru.bainc.model.FileFormatBook.TXT;
 
 class BookControllerTest {
@@ -209,10 +210,22 @@ class BookControllerTest {
     }
 
     @Test
-    void downloadBook() {
+    void deleteById(){
+        Mockito.when(bookService.deleteByIdToFront(DECIMAL)).thenReturn(new ResponseEntity<>(HttpStatus.OK));
+        assertEquals(HttpStatus.OK, bookController.deleteById(DECIMAL).getStatusCode());
+        Mockito.when(bookService.deleteByIdToFront(any())).thenReturn(new ResponseEntity<>(HttpStatus.BAD_REQUEST));
+        assertEquals(HttpStatus.BAD_REQUEST, bookController.deleteById(any()).getStatusCode());
+    }
+
+    @Test
+    void downloadBook() throws Exception {
         Book book = creatorBook();
         book.setId(DECIMAL);
-
-
+        Mockito.when(bookService.downloadBookFromFront(DECIMAL))
+                .thenReturn(new ResponseEntity<>(HttpStatus.OK));
+        assertEquals(HttpStatus.OK, bookController.downloadBook(DECIMAL).getStatusCode());
+        Mockito.when(bookService.downloadBookFromFront(any()))
+                .thenReturn(new ResponseEntity<>(HttpStatus.BAD_REQUEST));
+        assertEquals(HttpStatus.BAD_REQUEST, bookController.downloadBook(any()).getStatusCode());
     }
 }

@@ -97,7 +97,6 @@ class GenreServiceTest {
         Mockito.doNothing().when(genreRepository).delete(Mockito.any(Genre.class));
         assertFalse(genreService.deleteGenreByTitle(genre.getGenreTitle()));
         Mockito.doReturn(genre).when(genreRepository).findByGenreTitle(genre.getGenreTitle());
-//        Mockito.when(genreRepository.findByGenreTitle(TEXT)).thenReturn(genre);
         assertTrue(genreService.deleteGenreByTitle(genre.getGenreTitle()));
     }
 

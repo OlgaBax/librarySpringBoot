@@ -153,11 +153,11 @@ public class BookService {
 //        if (books == null) {
 //            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 //        } else {
-            return new ResponseEntity<>(books
-                    .stream()
-                    .map(book -> new BookOutDto(book)).sorted((x1, x2) -> x1.getId().compareTo(x2.getId()))
-                    .collect(Collectors.toList()), HttpStatus.OK);
-        }
+        return new ResponseEntity<>(books
+                .stream()
+                .map(book -> new BookOutDto(book)).sorted((x1, x2) -> x1.getId().compareTo(x2.getId()))
+                .collect(Collectors.toList()), HttpStatus.OK);
+    }
 //    }
 
     @Transactional
@@ -175,18 +175,21 @@ public class BookService {
     }
 
     @Transactional
-    public void deleteById(Long id) {
-        bookRepository.deleteById(id);
+    public boolean deleteById(Long id) {
+        Book book = bookRepository.findById(id).orElse(null);
+        if (book != null) {
+            bookRepository.delete(book);
+            return true;
+        } else return false;
     }
 
     @Transactional
     public ResponseEntity<?> deleteByIdToFront(Long id) {
-        try {
-            deleteById(id);
-        } catch (Exception e) {
+        if (deleteById(id)) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Transactional
@@ -285,7 +288,7 @@ public class BookService {
 
     @Transactional
     public Book downloadBook(Long id) {
-        Book book = bookRepository.findById(id).get();
+        Book book = bookRepository.findById(id).orElse(null);
         if (book != null) {
             try {
                 SevenZDecompress.decompress(bookStorage + File.separator + book.getPathToZipBook(),
@@ -306,7 +309,7 @@ public class BookService {
         } else {
             ResponseEntity<String> response = new ResponseEntity<>
                     (Base64Utils.fileToBase64(bookTemp + File.separator + book.getUuid() + "."
-                    + book.getFileFormatBook().toString().toLowerCase()), HttpStatus.OK);
+                            + book.getFileFormatBook().toString().toLowerCase()), HttpStatus.OK);
 
             SevenZCompress.cleanBookTemp(new File(bookTemp));
             return response;

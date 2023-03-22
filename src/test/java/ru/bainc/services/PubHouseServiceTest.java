@@ -107,7 +107,6 @@ class PubHouseServiceTest {
     void deleteByIdFromFront(){
         PubHouse pubHouse = new PubHouse(TEXT);
         pubHouse.setId(DECIMAL);
-        PubHouseDto pubHouseDto = new PubHouseDto(pubHouse);
         Mockito.when(pubHouseRepository.findById(DECIMAL)).thenReturn(Optional.of(pubHouse));
         assertEquals(HttpStatus.OK, pubHouseService.deleteByIdFromFront(DECIMAL).getStatusCode());
         Mockito.doNothing().when(pubHouseRepository).deleteById(any());
