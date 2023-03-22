@@ -7,6 +7,7 @@ import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.ModelExtensionsKt;
 import ru.bainc.dto.BookInDto;
 import ru.bainc.dto.BookOutDto;
@@ -314,8 +315,8 @@ class BookServiceTest {
         assertTrue(bookService.saveInfoAboutBookInFile(book, TEXT));
     }
 
-    @Test
-    void addBookFromFront() throws Exception {
+//    @Test
+//    void addBookFromFront() throws Exception {
 //        Genre genre = new Genre();
 //        genre.setId(DECIMAL);
 //        genre.setGenreTitle(TEXT);
@@ -374,18 +375,48 @@ class BookServiceTest {
 //        assertEquals(HttpStatus.OK, bookService.addBookFromFront(bookInDto).getStatusCode());
 //
 //
-    }
+//    }
 
 //    @Test
 //    void downloadBook() throws IOException {
 //        Book book = creatorBook();
 //        Mockito.when(bookRepository.findById(DECIMAL)).thenReturn(Optional.of(book));
-//        SevenZDecompress.decompress("storage" + File.separator + book.getPathToZipBook(), "temp");
+//        MockedStatic<SevenZDecompress> mockedStatic = Mockito.mockStatic(SevenZDecompress.class);
 //        assertEquals(book, bookService.downloadBook(DECIMAL));
 //    }
 
+
+//    @Test
+//    void downloadBook() throws Exception {
+//        Book book = creatorBook();
+//        book.setId(DECIMAL);
+//        Mockito.when(bookService.downloadBookFromFront(DECIMAL))
+//                .thenReturn(new ResponseEntity<>(HttpStatus.OK));
+//        assertEquals(HttpStatus.OK, bookController.downloadBook(DECIMAL).getStatusCode());
+//        Mockito.when(bookService.downloadBookFromFront(any()))
+//                .thenReturn(new ResponseEntity<>(HttpStatus.BAD_REQUEST));
+//        assertEquals(HttpStatus.BAD_REQUEST, bookController.downloadBook(any()).getStatusCode());
+//    }
+
+//    @Test
+//    void downloadBookFromFront() {
+//    }
+
     @Test
-    void downloadBookFromFront() {
+    void deleteById() {
+        Book book = creatorBook();
+        Mockito.when(bookRepository.findById(DECIMAL)).thenReturn(Optional.of(book));
+        assertTrue(bookService.deleteById(DECIMAL));
+        Mockito.doNothing().when(bookRepository).delete(book);
+        assertFalse(bookService.deleteById(null));
     }
 
+    @Test
+    void deleteByIdToFront() {
+        Book book = creatorBook();
+        Mockito.when(bookRepository.findById(DECIMAL)).thenReturn(Optional.of(book));
+        assertEquals(HttpStatus.OK, bookService.deleteByIdToFront(DECIMAL).getStatusCode());
+        Mockito.doNothing().when(bookRepository).deleteById(any());
+        assertEquals(HttpStatus.BAD_REQUEST, bookService.deleteByIdToFront(null).getStatusCode());
+    }
 }

@@ -11,7 +11,6 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
-//@AllArgsConstructor
 public class BookInDto {
 
     private String title;

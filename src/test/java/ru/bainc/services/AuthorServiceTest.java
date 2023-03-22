@@ -1,9 +1,12 @@
 package ru.bainc.services;
 
+import liquibase.pro.packaged.T;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.http.HttpStatus;
+import org.springframework.ui.ModelExtensionsKt;
 import ru.bainc.dto.AuthorDto;
 import ru.bainc.model.Author;
 import ru.bainc.repositories.AuthorRepository;
@@ -91,5 +94,46 @@ class AuthorServiceTest {
         AuthorDto authorDto = new AuthorDto(author);
         Mockito.when(authorRepository.save(any())).thenReturn(author);
         assertEquals(HttpStatus.OK, authorService.addAuthorFromFront(authorDto).getStatusCode());
+    }
+
+    @Test
+    void deleteById(){
+        Author author = new Author(TEXT, TEXT, TEXT);
+        author.setId(DECIMAL);
+        Mockito.when(authorRepository.findById(DECIMAL)).thenReturn(Optional.of(author));
+        assertTrue(authorService.deleteById(DECIMAL));
+        Mockito.doNothing().when(authorRepository).deleteById(any());
+        assertFalse(authorService.deleteById(null));
+    }
+
+    @Test
+    void deleteByIdFromFront(){
+        Author author = new Author(TEXT, TEXT, TEXT);
+        author.setId(DECIMAL);
+        Mockito.when(authorRepository.findById(DECIMAL)).thenReturn(Optional.of(author));
+        assertEquals(HttpStatus.OK, authorService.deleteByIdFromFront(DECIMAL).getStatusCode());
+        Mockito.doNothing().when(authorRepository).deleteById(any());
+        assertEquals(HttpStatus.BAD_REQUEST, authorService.deleteByIdFromFront(any()).getStatusCode());
+    }
+
+    @Test
+    void deleteAuthor(){
+        Author author = new Author(TEXT, TEXT, TEXT);
+        author.setId(DECIMAL);
+        Mockito.when(authorRepository.findByFio(TEXT, TEXT, TEXT)).thenReturn(author);
+        assertTrue(authorService.deleteAuthor(author.getName(), author.getSurName(), author.getMiddleName()));
+        Mockito.when(authorRepository.findByFio(any(), any(), any())).thenReturn(null);
+        assertFalse(authorService.deleteAuthor(any(), any(), any()));
+    }
+
+    @Test
+    void deleteByFioToFront(){
+        Author author = new Author(TEXT, TEXT, TEXT);
+        author.setId(DECIMAL);
+        AuthorDto authorDto = new AuthorDto(author);
+        Mockito.when(authorRepository.findByFio(authorDto.getName(), authorDto.getSurName(), authorDto.getMiddleName())).thenReturn(author);
+        assertEquals(HttpStatus.OK, authorService.deleteByFioToFront(authorDto).getStatusCode());
+        Mockito.when(authorRepository.findByFio(any(), any(), any())).thenReturn(null);
+        assertEquals(HttpStatus.BAD_REQUEST, authorService.deleteByFioToFront(authorDto).getStatusCode());
     }
 }
