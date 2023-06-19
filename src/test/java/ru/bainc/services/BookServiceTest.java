@@ -1,28 +1,17 @@
 package ru.bainc.services;
 
-import liquibase.pro.packaged.T;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.MockedStatic;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.ui.ModelExtensionsKt;
 import ru.bainc.dto.BookInDto;
 import ru.bainc.dto.BookOutDto;
 import ru.bainc.dto.BookSearchDto;
 import ru.bainc.model.*;
-import ru.bainc.repositories.*;
-import ru.bainc.util.SevenZCompress;
-import ru.bainc.util.SevenZDecompress;
-
-import java.io.File;
-import java.io.IOException;
+import ru.bainc.repositories.BookRepository;
 import java.util.*;
-
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
 import static ru.bainc.model.FileFormatBook.TXT;
 
 class BookServiceTest {
